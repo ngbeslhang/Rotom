@@ -6,6 +6,7 @@
 # Requirement
 - Python 3.5 / 3.4 (former is recommended)
   - `discord.py`
+  - `pyyaml`
 
 # Installation
 WIP
