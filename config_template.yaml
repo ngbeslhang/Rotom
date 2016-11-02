@@ -1,10 +1,13 @@
 # Config file for Rotom
 ---
-token: ~ # Replace ~ with your bot token
+token      : ~ # Replace ~ with your bot token
+prefix     : [:, ::]
+init_status: ~
+shard_num  : 1
 
 db:
     name   : rotom
-    host   : ~
+    host   : localhost
     port   : ~
 
     wrapper: couchdb # Bot will automatically find db_<wrapper>.py in ext folder
