@@ -4,7 +4,7 @@
 **NOTE:** This repo is still WIP.
 
 # Requirement
-- Python 3.5 / 3.4 (former is recommended)
+- Python 3.4 / 3.5 (recommended)
   - `discord.py`
   - `pyyaml`
 
