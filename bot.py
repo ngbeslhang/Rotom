@@ -1,6 +1,7 @@
 """Rotom's bot core"""
 import os
 import sys
+import importlib
 import asyncio
 import logging
 import yaml
@@ -70,3 +71,6 @@ class Bot(commands.Bot):
             **options
         )
         self.log.info("Self-initialized!")
+
+        # Setting up database
+        self.db = import  
