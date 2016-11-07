@@ -40,7 +40,7 @@ class Bot(commands.Bot):
             self.log.info("[CONFIG] Attempting to load {}".format(config_file))
             with open(config_file, 'r') as c_yaml:
                 self.config = yaml.load(c_yaml)
-                self.load.info("[CONFIG] Successfully loaded config file!")
+                self.load.info("[CONFIG] Success!")
         except FileNotFoundError:
             self.log.error(
                 "[CONFIG] Unable to find {}!".format(config_file))
@@ -48,7 +48,7 @@ class Bot(commands.Bot):
                 self.log.info("[CONFIG] Attempting to load the template config file...")
                 with open('config_template.yaml', 'r') as c_yaml:
                     self.config = yaml.load(c_yaml)
-                    self.log.info("[CONFIG] Successfully loaded the template config file!")
+                    self.log.info("[CONFIG] Success!")
                     self.log.info("[CONFIG] Checking if token isn't empty...")
 
                     if self.config['token'] is not None:
@@ -56,6 +56,9 @@ class Bot(commands.Bot):
                             "[CONFIG] Token isn't empty, the template config file "
                             "will be renamed to the filename you have passed.")
                         os.rename('config_template.yaml', config_file)
+                    else:
+                        self.log.error("[CONFIG] Please provide a token in the config file.")
+                        sys.exit()
             except FileNotFoundError:
                 self.log.error(
                     "[CONFIG] Unable to find template config file! "
@@ -73,4 +76,16 @@ class Bot(commands.Bot):
         self.log.info("Self-initialized!")
 
         # Setting up database
-        self.db = import  
+        try:
+            self.log.info("[DB] Importing database wrapper...")
+            self.db = importlib.import_module(
+                "ext.db_{}".format(self.config['db']['wrapper'])
+            )
+            self.log.info("[DB] Success!")
+        except ImportError:
+            self.log.error(
+                "[DB] Unable to find database wrapper with the given "
+                "name in config file! Please double-check to make "
+                "sure there's no typo or the database wrapper does exist."
+            )
+            sys.exit()
