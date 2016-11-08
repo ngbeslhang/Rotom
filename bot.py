@@ -2,11 +2,11 @@
 import os
 import sys
 import importlib
-import asyncio
+#import asyncio
 import logging
 import yaml
 
-import discord
+#import discord
 from discord.ext import commands
 
 class Bot(commands.Bot):
@@ -30,6 +30,8 @@ class Bot(commands.Bot):
         self.log.setLevel(logging.INFO)
         self.log.addHandler(file_hdlr)
         self.log.addHandler(stream_hdlr)
+
+        #del formatter, file_hdlr, stream_hdlr # Might have it's use
 
         self.log.info("[LOGGING] Successfully set up logging system!")
 
@@ -78,11 +80,15 @@ class Bot(commands.Bot):
         # Setting up database
         try:
             self.log.info("[DB] Importing database wrapper...")
-            self.db = importlib.import_module(
+            db_temp = importlib.import_module(
                 "ext.db_{}".format(self.config['db']['wrapper'])
             )
             self.log.info("[DB] Success!")
             self.log.info("[DB] Attempting to connect to database...")
+
+            # importlib every string in db_temp.required
+            # set self.db as db_temp.DB
+            del db_temp
         except ImportError:
             self.log.error(
                 "[DB] Unable to find database wrapper with the given "
