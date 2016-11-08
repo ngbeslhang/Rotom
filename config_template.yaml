@@ -1,7 +1,7 @@
 # Config file for Rotom
 ---
 token      : ~ # Replace ~ with your bot token, otherwise the bot won't run
-prefix     : [":", "::"] # If you can't figure out how to add it, Google ""
+prefix     : [":", "::"] # If you can't figure out how to add it, Google "YAML list"
 init_status: ~ # Optional
 shard_num  : 1 # Do NOT change the value if you don't know what exactly does it do
 
