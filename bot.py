@@ -82,10 +82,14 @@ class Bot(commands.Bot):
                 "ext.db_{}".format(self.config['db']['wrapper'])
             )
             self.log.info("[DB] Success!")
+            self.log.info("[DB] Attempting to connect to database...")
         except ImportError:
             self.log.error(
                 "[DB] Unable to find database wrapper with the given "
                 "name in config file! Please double-check to make "
                 "sure there's no typo or the database wrapper does exist."
             )
+            sys.exit()
+        except AttributeError:
+            self.log.error("[DB] Unable to find connect()!")
             sys.exit()
