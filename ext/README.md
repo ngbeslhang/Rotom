@@ -3,7 +3,7 @@
 ### Specs
 - `connect()`
   - Method 1
-    - Requires `bot: discord.Client`, `name: str`, `host: str`, `port: str`
+    - Requires `name: str`, `host: str`, `port: str`
     - Optional `username: str`, `password: str`
 - `insert()` (Method undecided)
   - Method 1 (Bias towards document store databases)
