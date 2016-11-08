@@ -1,7 +1,7 @@
 # Config file for Rotom
 ---
 token      : ~ # Replace ~ with your bot token
-prefix     : [:, ::]
+prefix     : [":", "::"]
 init_status: ~
 shard_num  : 1
 
