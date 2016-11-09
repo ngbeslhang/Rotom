@@ -86,8 +86,26 @@ class Bot(commands.Bot):
             self.log.info("[DB] Success!")
             self.log.info("[DB] Attempting to connect to database...")
 
-            # importlib every string in db_temp.required
-            # set self.db as db_temp.DB
+            self.log.info("[DB] Importing required module(s) stated by database wrapper...")
+                
+            for mod in db_temp.required:
+                try:
+                    importlib.import_module(mod)
+                except ImportError:
+                    self.log.error(
+                        "[DB] Unable to import module {}! ".format(mod) +
+                        "Please download the module either by pip or official sources."
+                    )
+                    sys.exit()
+        
+            self.db = db_temp.DB(
+                self.config['db']['name'],
+                self.config['db']['host'],
+                self.config['db']['port'],
+                self.config['db']['user'],
+                self.config['db']['passwd']
+            )
+
             del db_temp
         except ImportError:
             self.log.error(
