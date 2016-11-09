@@ -2,6 +2,7 @@
 ## Database wrapper
 ### Specs
 - `required: list` - A list of required module(s)' name which will be used to import them dynamically using `importlib` to the bot.
+- The wrapper will need to handle the database-specific exceptions inside itself.
 - `DB: class` - The main class for a database wrapper
   - `__init__()`
     - Method 1
