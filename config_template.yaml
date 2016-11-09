@@ -12,6 +12,9 @@ db:
     host   : localhost
     port   : 5984
 
+    user   : ~
+    passwd : ~
+
     wrapper: couchdb # Bot will automatically find db_<wrapper>.py in ext folder
 
 # If you don't know what is this section for, ignore it too
