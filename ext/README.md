@@ -7,6 +7,8 @@
     - Method 1
       - Requires `host: str`, `port: str`, `name: str`
       - Optional `username: str`, `password: str`
+      - If not server based, self._server must be None
+      - self._db for database itself
   - `insert()` (Method undecided)
     - Method 1 (Bias towards document store databases)
       - Accepts dict + Discord object (server, channel, user and their variants)
