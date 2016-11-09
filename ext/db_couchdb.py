@@ -6,7 +6,7 @@ import couchdb
 required = ["couchdb"]
 
 class DB:
-    def __init__(self, host, port, name, user=None, passwd=None):
+    def __init__(self, name, host, port, user, passwd):
         """
         Connects to the server and create a database for the bot.
         """
