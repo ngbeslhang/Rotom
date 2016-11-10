@@ -1,6 +1,4 @@
-"""
-db_couchdb.py - CouchDB wrapper for Rotom
-"""
+"""db_couchdb.py - CouchDB wrapper for Rotom"""
 import couchdb
 
 required = ["couchdb"]
