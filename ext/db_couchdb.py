@@ -3,11 +3,12 @@ import couchdb
 
 required = ["couchdb"]
 
+
 class DB:
+    """Database class."""
+
     def __init__(self, name, host, port, user, passwd):
-        """
-        Connects to the server and create a database for the bot.
-        """
+        """Connects to the server and create a database for the bot."""
         if user and passwd != None:
             url = "https://{}:{}@{}:{}".format(user, passwd, host, port)
         elif user != None:

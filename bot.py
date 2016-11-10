@@ -9,15 +9,14 @@ import yaml
 #import discord
 from discord.ext import commands
 
+
 class Bot(commands.Bot):
     """Bot class of Rotom, pretty self-explainatory"""
 
     def __init__(self, config_file: str='config.yaml', **options):
         # Setting up logging
         file_hdlr = logging.FileHandler(
-            filename='LOG',
-            encoding='utf-8',
-            mode='a')
+            filename='LOG', encoding='utf-8', mode='a')
         stream_hdlr = logging.StreamHandler()
 
         formatter = logging.Formatter(
@@ -31,7 +30,7 @@ class Bot(commands.Bot):
         self.log.addHandler(file_hdlr)
         self.log.addHandler(stream_hdlr)
 
-        #del formatter, file_hdlr, stream_hdlr # Might have it's use
+        # del formatter, file_hdlr, stream_hdlr # Might have it's use
 
         self.log.info("[LOGGING] Successfully set up logging system!")
 
@@ -44,10 +43,10 @@ class Bot(commands.Bot):
                 self.config = yaml.load(c_yaml)
                 self.load.info("[CONFIG] Success!")
         except FileNotFoundError:
-            self.log.error(
-                "[CONFIG] Unable to find {}!".format(config_file))
+            self.log.error("[CONFIG] Unable to find {}!".format(config_file))
             try:
-                self.log.info("[CONFIG] Attempting to load the template config file...")
+                self.log.info(
+                    "[CONFIG] Attempting to load the template config file...")
                 with open('config_template.yaml', 'r') as c_yaml:
                     self.config = yaml.load(c_yaml)
                     self.log.info("[CONFIG] Success!")
@@ -59,35 +58,35 @@ class Bot(commands.Bot):
                             "will be renamed to the filename you have passed.")
                         os.rename('config_template.yaml', config_file)
                     else:
-                        self.log.error("[CONFIG] Please provide a token in the config file.")
+                        self.log.error(
+                            "[CONFIG] Please provide a token in the config file."
+                        )
                         sys.exit()
             except FileNotFoundError:
-                self.log.error(
-                    "[CONFIG] Unable to find template config file! "
-                    "Please make sure that either config.yaml or "
-                    "config_template.yaml exist. You can check the "
-                    "GitHub repo for the config template.")
+                self.log.error("[CONFIG] Unable to find template config file! "
+                               "Please make sure that either config.yaml or "
+                               "config_template.yaml exist. You can check the "
+                               "GitHub repo for the config template.")
                 self.log.info("Exiting...")
                 sys.exit()
 
         # Initializing commands.Bot
         super().__init__(
-            command_prefix=commands.when_mentioned_or(),
-            **options
-        )
+            command_prefix=commands.when_mentioned_or(), **options)
         self.log.info("Self-initialized!")
 
         # Setting up database
         try:
             self.log.info("[DB] Importing database wrapper...")
-            db_temp = importlib.import_module(
-                "ext.db_{}".format(self.config['db']['wrapper'])
-            )
+            db_temp = importlib.import_module("ext.db_{}".format(self.config[
+                'db']['wrapper']))
             self.log.info("[DB] Success!")
             self.log.info("[DB] Attempting to connect to database...")
 
-            self.log.info("[DB] Importing required module(s) stated by database wrapper...")
-                
+            self.log.info(
+                "[DB] Importing required module(s) stated by database wrapper..."
+            )
+
             for mod in db_temp.required:
                 try:
                     importlib.import_module(mod)
@@ -97,22 +96,18 @@ class Bot(commands.Bot):
                         "Please download the module either by pip or official sources."
                     )
                     sys.exit()
-        
+
             self.db = db_temp.DB(
-                self.config['db']['name'],
-                self.config['db']['host'],
-                self.config['db']['port'],
-                self.config['db']['user'],
-                self.config['db']['passwd']
-            )
+                self.config['db']['name'], self.config['db']['host'],
+                self.config['db']['port'], self.config['db']['user'],
+                self.config['db']['passwd'])
 
             del db_temp
         except ImportError:
             self.log.error(
                 "[DB] Unable to find database wrapper with the given "
                 "name in config file! Please double-check to make "
-                "sure there's no typo or the database wrapper does exist."
-            )
+                "sure there's no typo or the database wrapper does exist.")
             sys.exit()
         except AttributeError:
             self.log.error("[DB] Unable to find connect()!")
