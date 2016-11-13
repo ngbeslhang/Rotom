@@ -14,6 +14,9 @@ class Bot(commands.Bot):
     """Bot class of Rotom, pretty self-explainatory"""
 
     def __init__(self, config_file: str='config.yaml', **options):
+        # For selfbots
+        bot = options.get('bot', True)
+
         # Setting up logging
         file_hdlr = logging.FileHandler(
             filename='LOG', encoding='utf-8', mode='a')
