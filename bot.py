@@ -78,6 +78,7 @@ class Bot(commands.Bot):
             command_prefix=commands.when_mentioned_or(), **options)
         self.log.info("Self-initialized!")
 
+        '''
         # Setting up database
         try:
             self.log.info("[DB] Importing database wrapper...")
@@ -115,3 +116,4 @@ class Bot(commands.Bot):
         except AttributeError:
             self.log.error("[DB] Unable to find connect()!")
             sys.exit()
+        '''
