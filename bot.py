@@ -78,6 +78,7 @@ class Bot(commands.Bot):
             command_prefix=commands.when_mentioned_or(), **options)
         self.log.info("Self-initialized!")
 
+        # CONSIDERING ABANDONING MODULAR DATABASE SETUP FOR NOW
         '''
         # Setting up database
         try:
