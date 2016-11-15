@@ -5,8 +5,11 @@
 
 # Requirement
 - Python 3.4 / 3.5 (recommended)
-  - `discord.py`
+  - Develop version of `discord.py` @ https://github.com/Rapptz/discord.py
   - `pyyaml`
 
 # Installation
 WIP
+
+# Special thanks
+- (Rapptz)[https://github.com/Rapptz] for creating discord.py
