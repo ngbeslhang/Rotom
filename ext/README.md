@@ -1,3 +1,4 @@
+You should be ignoring this README.
 ***NOTE: THE IDEA OF MODULAR DATABASE WRAPPERS HAVE BEEN ABANDONED.***
 
 # Extensions
@@ -21,3 +22,43 @@
     - Methods are same as `insert()` except it search and removes instead
   - `find()` (Method undecided)
     - Methods are same as `insert()` it search and returns a dict of matching kv instead
+
+'''
+        # Setting up database
+        try:
+            self.log.info("[DB] Importing database wrapper...")
+            db_temp = importlib.import_module("ext.db_{}".format(self.config[
+                'db']['wrapper']))
+            self.log.info("[DB] Success!")
+            self.log.info("[DB] Attempting to connect to database...")
+
+            self.log.info(
+                "[DB] Importing required module(s) stated by database wrapper..."
+            )
+
+            for mod in db_temp.required:
+                try:
+                    importlib.import_module(mod)
+                except ImportError:
+                    self.log.error(
+                        "[DB] Unable to import module {}! ".format(mod) +
+                        "Please download the module either by pip or official sources."
+                    )
+                    sys.exit()
+
+            self.db = db_temp.DB(
+                self.config['db']['name'], self.config['db']['host'],
+                self.config['db']['port'], self.config['db']['user'],
+                self.config['db']['passwd'])
+
+            del db_temp
+        except ImportError:
+            self.log.error(
+                "[DB] Unable to find database wrapper with the given "
+                "name in config file! Please double-check to make "
+                "sure there's no typo or the database wrapper does exist.")
+            sys.exit()
+        except AttributeError:
+            self.log.error("[DB] Unable to find connect()!")
+            sys.exit()
+'''
