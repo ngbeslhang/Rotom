@@ -4,5 +4,5 @@
 name: Template
 # REQUIRED: The name of the language pack's author (most likely you), it doesn't have to be real name.
 # If there's more than one author, make author a collection instead and insert names into it.
-# If you don't know what is a collection, 
+# If you don't know what is a collection, https://symfony.com/doc/current/components/yaml/yaml_format.html#collections
 author: ngbeslhang
