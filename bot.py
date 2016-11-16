@@ -17,6 +17,8 @@ class Bot(commands.Bot):
         # For selfbots
         bot = options.get('bot', True)
 
+        # Setting up language packs
+
         # Setting up logging
         file_hdlr = logging.FileHandler(
             filename='LOG', encoding='utf-8', mode='a')
@@ -79,5 +81,3 @@ class Bot(commands.Bot):
         self.log.info("Self-initialized!")
 
         # Initialize database
-
-        # Initialize language packs
