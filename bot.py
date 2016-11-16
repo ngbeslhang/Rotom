@@ -77,3 +77,7 @@ class Bot(commands.Bot):
         super().__init__(
             command_prefix=commands.when_mentioned_or(), **options)
         self.log.info("Self-initialized!")
+
+        # Initialize database
+
+        # Initialize language packs
