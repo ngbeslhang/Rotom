@@ -1,0 +1,8 @@
+# __info__.yaml template for Rotom's language packs
+---
+# REQUIRED: Language full name (e.g. British English, Traditional Chinese, Malay)
+name: Template
+# REQUIRED: The name of the language pack's author (most likely you), it doesn't have to be real name.
+# If there's more than one author, make author a collection instead and insert names into it.
+# If you don't know what is a collection, 
+author: ngbeslhang
