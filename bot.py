@@ -1,11 +1,9 @@
 """Rotom's bot core"""
 import os
 import sys
-
 #import asyncio
 import logging
 import yaml
-
 #import discord
 from discord.ext import commands
 
@@ -72,7 +70,6 @@ class Bot(commands.Bot):
                                "Please make sure that either config.yaml or "
                                "config_template.yaml exist. You can check the "
                                "GitHub repo for the config template.")
-                self.log.info("Exiting...")
                 sys.exit()
 
         # Initializing commands.Bot
