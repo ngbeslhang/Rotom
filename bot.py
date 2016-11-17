@@ -25,7 +25,7 @@ class Bot(commands.Bot):
         stream_hdlr = logging.StreamHandler()
 
         formatter = logging.Formatter(
-            fmt='[%(asctime)s] [%(levelname)s] [BOT] %(message)s',
+            fmt='[%(asctime)s] [%(levelname)s] %(message)s',
             datefmt='GMT%z %Y-%m-%d %I:%M:%S%p')
         file_hdlr.setFormatter(formatter)
         stream_hdlr.setFormatter(formatter)
