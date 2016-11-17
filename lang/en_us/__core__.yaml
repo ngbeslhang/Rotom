@@ -10,8 +10,17 @@ log:
 
         loading: "Loading {}..."
         success: "Successfully loaded config file!"
+
+        check_token: "Checking if a token is already provided..."
+        token_exist: "Token found!"
+        no_token_error: "Please provide a token in the config file."
+        
+        rename_to_config: "{} will be renamed to {}."
         
         file_not_found: "Unable to find {}!"
         check_exist: "Please check if either {} or config_template.yaml exist."
+
+    bot:
+        initialize: "Self-initialized!"
 
 
