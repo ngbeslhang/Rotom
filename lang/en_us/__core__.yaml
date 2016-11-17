@@ -1,0 +1,17 @@
+# For Rotom's core'
+---
+log:
+    logging:
+        _prefix: "[LOGGING]"
+        success: "Successfully set up logging system!"
+
+    config:
+        _prefix: "[CONFIG]"
+
+        loading: "Loading {}..."
+        success: "Successfully loaded config file!"
+        
+        file_not_found: "Unable to find {}!"
+        check_exist: "Please check if either {} or config_template.yaml exist."
+
+
