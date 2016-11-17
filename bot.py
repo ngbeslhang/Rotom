@@ -78,3 +78,5 @@ class Bot(commands.Bot):
         self.log.info("Self-initialized!")
 
         # Initialize database
+
+    # Some discord.Embed objects with custom colors here
