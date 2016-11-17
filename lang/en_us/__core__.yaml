@@ -21,6 +21,14 @@ log:
         check_exist: "Please check if either {} or config_template.yaml exist."
 
     bot:
+        _prefix: "[BOT]"
+        success: "Success!"
+
         initialize: "Self-initialized!"
+        ready: "Ready to accept events!"
 
+        login: "Logging in with the provided token..."
+        login_fail: "Unable to log in with the provided token!"
 
+        connect: "Connecting to Discord websocket..."
+        connect_fail: "Unable to connect!"
