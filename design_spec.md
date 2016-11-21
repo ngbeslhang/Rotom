@@ -1,5 +1,5 @@
 ***NOTE***: Everything here should be considered as self-notes, however suggestions are recommended.
-# Language pack implementation
+## Language pack implementation
 A cog must be able to use the language system like this:
 
 ```py
