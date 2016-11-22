@@ -17,7 +17,8 @@ class Bot(commands.Bot):
         bot = options.get('bot', True)
 
         # Setting up language packs
-        self._lang = pathlib.Path('lang')
+        self._langpath = pathlib.Path('lang')
+        self._lang = self.get_lang('__core__')
 
         # Setting up logging
         file_hdlr = logging.FileHandler(
@@ -82,7 +83,7 @@ class Bot(commands.Bot):
         # Initialize database
 
     def get_lang(self, filename: str):
-        pass
+        return Language(filename, self._langpath)
 
     # Some discord.Embed objects with custom colors here
 
