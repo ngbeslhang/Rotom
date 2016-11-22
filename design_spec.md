@@ -18,7 +18,7 @@ class Cog:
 - ...whose get() can be called to fetch requested string from the language pack
 
 The returned class of `Bot.get_lang()` **MUST**:
-- have a required param `filename` in `__init__()`
+- have a required param `filename` and `path_obj` in `__init__()`
 - consist of `get()` function
 - have a local dictionary for YAML with the passed `filename` in each language pack
   - if unable to find any, set it as `None` instead

@@ -1,10 +1,11 @@
 """Rotom's bot core"""
 import os
 import sys
+import pathlib
 #import asyncio
 import logging
 import yaml
-#import discord
+import discord
 from discord.ext import commands
 
 
@@ -16,6 +17,7 @@ class Bot(commands.Bot):
         bot = options.get('bot', True)
 
         # Setting up language packs
+        self._lang = pathlib.Path('lang')
 
         # Setting up logging
         file_hdlr = logging.FileHandler(
@@ -79,4 +81,26 @@ class Bot(commands.Bot):
 
         # Initialize database
 
+    def get_lang(self, filename: str):
+        pass
+
     # Some discord.Embed objects with custom colors here
+
+
+class Language:
+    """Class for Bot.get_lang()"""
+
+    def __init__(self, filename: str, path_obj: pathlib.Path):
+        pass
+
+    def get(self, key: str, obj, separator='.'):
+        if isinstance(obj, str):
+            pass
+        elif isinstance(obj, discord.Message):
+            # Search for language setting at database
+            pass
+
+
+# Builtin commands
+class Builtin:
+    pass
