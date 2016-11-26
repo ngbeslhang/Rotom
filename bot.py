@@ -96,10 +96,11 @@ class Language:
 
     def get(self, key: str, obj, separator='.'):
         if isinstance(obj, str):
-            pass
+            _obj = obj
         elif isinstance(obj, discord.Message):
-            # Search for language setting at database
-            pass
+            _obj = [obj.author.id, obj.channel.id, obj.server.id] # IN ORDER
+            # for key in obj, if main/fallback lang setting isn't none, use the language
+            # Otherwise use the default language either in config or en_us
 
 
 # Builtin commands
