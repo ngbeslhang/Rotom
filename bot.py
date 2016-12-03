@@ -92,6 +92,10 @@ class Language:
     """Class for Bot.get_lang()"""
 
     def __init__(self, filename: str, path_obj: pathlib.Path):
+        # for folder in lang folder
+            # search for filename in folder
+            # if available, load the YAML file and load it into 
+            # dict, with folder name as key and loaded YAML as value
         pass
 
     def get(self, key: str, obj, separator='.'):
