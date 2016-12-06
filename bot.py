@@ -1,7 +1,6 @@
 """Rotom's bot core"""
 import os
 import sys
-import pathlib
 #import asyncio
 import logging
 import yaml
@@ -17,8 +16,7 @@ class Bot(commands.Bot):
         bot = options.get('bot', True)
 
         # Setting up language packs
-        self._langpath = pathlib.Path('lang')
-        self._lang = self.get_lang('__core__')
+        self._lang = self.load_lang('lang')
 
         # Setting up logging
         file_hdlr = logging.FileHandler(
@@ -82,30 +80,79 @@ class Bot(commands.Bot):
 
         # Initialize database
 
-    def get_lang(self, filename: str):
-        return Language(filename, self._langpath)
-
     # Some discord.Embed objects with custom colors here
+
+    def load_lang(self, path: str):
+        """Loads all available language packs."""
+        for a in os.scandir('lang'):
+            if a.is_dir():
+                self._lang.update(
+                    { a.name: Language(a) }
+                )
+
+    def get_lang(self, filename: str):
+        """Returns the strings of matching filename in dictionary."""
+        return Coglang(self._lang, filename)
+                        
+    def when_mentioned_or(self, *prefixes):
+        """Basically the same as `discord.ext.commands.when_mentioned_or` except it also checks for custom per-server prefixes."""
+        def inner(bot, msg):
+            r = list(prefixes)
+            r.append(commands.when_mentioned(bot, msg))
+            # If custom prefix is not None:
+            # r.append(list(custom_prefix_list))
+            return r
+        return inner
 
 
 class Language:
-    """Class for Bot.get_lang()"""
+    """Class for language pack"""
 
-    def __init__(self, filename: str, path_obj: pathlib.Path):
-        # for folder in lang folder
-            # search for filename in folder
-            # if available, load the YAML file and load it into 
-            # dict, with folder name as key and loaded YAML as value
-        pass
+    def __init__(self, path):
+        self.path = path
+        info = None
 
-    def get(self, key: str, obj, separator='.'):
-        if isinstance(obj, str):
-            _obj = obj
-        elif isinstance(obj, discord.Message):
-            _obj = [obj.author.id, obj.channel.id, obj.server.id] # IN ORDER
-            # for key in obj, if main/fallback lang setting isn't none, use the language
-            # Otherwise use the default language either in config or en_us
+        # Loads __info__
+        for a in os.scandir(self.path):
+            if a.is_file() and "__info__" in a.name:
+                with open(a.path, 'r') as y:
+                    info = yaml.load(y)
+        
+        # Just in case __info__ isn't available'
+        if info is None:
+            info = {"name": self.path.name, "author": [None]}
+        
+        # Turn __info__ attrubutes into Language class'
+        self.name = info['name']
+        self.author = tuple(info['author'])
 
+
+class Coglang:
+    """Class for cogs language system"""
+    def __init__(self, langs: dict, filename: str):
+        self._strings = {}
+
+        # Search for file with matching filename in each language pack
+        for lang in langs.values():
+            for a in os.scandir(lang.path):
+                if a.is_file() and filename in a.name:
+                    with open(a.path, 'r') as y:
+                        self._strings.update(
+                            { lang.path.name: yaml.load(y) }
+                        )
+                # else if there's no filename in the path, return none
+
+    def get(self, key: str, separator: str='.', no_prefix=False):
+        """Search for matching key via query and returns it.
+
+        Parameters:
+        `key`: `str` - Query that will be used to search for matching key.
+        `separator`: `str` - `.` by default, the character that will be used to split the `key` param.
+        `no_prefix`: `bool` - `False` by default, check whenether if you want to use the `_prefix` key if it's in the 
+                     parent key of the requested key.'"""
+        # split the key
+        # search for it inside self_strings
+        # return None at KeyError
 
 # Builtin commands
 class Builtin:
