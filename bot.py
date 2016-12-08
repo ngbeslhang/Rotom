@@ -140,8 +140,8 @@ class Coglang:
                         self._strings.update(
                             { lang.path.name: yaml.load(y) }
                         )
-                # else if there's no filename in the path, return none
-                # OR, ignore it and check it using try-except + KeyError in get()
+                # else if there's no filename in the path, ignore it and 
+                # check it using try-except + KeyError in get()
 
     def get(self, key: str, separator: str='.', no_prefix=False):
         """Search for matching key via query and returns it.
