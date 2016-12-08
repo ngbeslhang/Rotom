@@ -122,7 +122,7 @@ class Language:
         if info is None:
             info = {"name": self.path.name, "author": [None]}
         
-        # Turn __info__ attrubutes into Language class'
+        # Turn __info__ attrubutes into Language class''
         self.name = info['name']
         self.author = tuple(info['author'])
 
@@ -141,6 +141,7 @@ class Coglang:
                             { lang.path.name: yaml.load(y) }
                         )
                 # else if there's no filename in the path, return none
+                # OR, ignore it and check it using try-except + KeyError in get()
 
     def get(self, key: str, separator: str='.', no_prefix=False):
         """Search for matching key via query and returns it.
