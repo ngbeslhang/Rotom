@@ -22,3 +22,14 @@ The returned class of `Bot.get_lang()` **MUST**:
 - consist of `get()` function
 - have a local dictionary for YAML with the passed `filename` in each language pack
   - if unable to find any, set it as `None` instead
+
+***OR***
+
+Example translation file:
+```
+"Hello, world!": "您好世界"
+```
+In Python:
+```py
+print(locale('Hello, world!', 'zh_cn'))
+```
