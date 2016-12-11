@@ -33,3 +33,5 @@ In Python:
 ```py
 print(locale('Hello, world!', 'zh_cn'))
 ```
+
+There should be no need for __info__.yaml, considering removing it
