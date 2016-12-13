@@ -1,5 +1,8 @@
 # For Rotom's core'
 ---
+name  : English (US)
+author: ngbeslhang
+
 log:
     logging:
         _prefix: "[LOGGING]"
