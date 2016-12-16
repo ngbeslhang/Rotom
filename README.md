@@ -4,9 +4,11 @@
 **NOTE:** This repo is still WIP.
 
 # Requirement
-- Python 3.4 / 3.5 (recommended)
-  - Develop version of `discord.py` @ https://github.com/Rapptz/discord.py
+- Python 3.4+
+  - `discord.py`
+  - `rethinkdb`
   - `pyyaml`
+- RethinkDB
 
 # Installation
 WIP
