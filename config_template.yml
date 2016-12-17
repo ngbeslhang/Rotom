@@ -21,8 +21,6 @@ db:
     user   : ~
     passwd : ~
 
-    wrapper: couchdb # Bot will automatically find db_<wrapper>.py in ext folder
-
 # If you don't know what is this section for, ignore it too
 # This section is mainly for bot devs and/or larger scale bots (250 or more servers)
 api:
