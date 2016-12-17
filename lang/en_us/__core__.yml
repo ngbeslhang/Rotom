@@ -2,10 +2,10 @@
 ---
 name  : English (US)
 author:
-- name: ngbeslhang
-  contact:
-  - ngb#0995
-  - ngbeslhang@gmail.com
+  - name: ngbeslhang
+    contact:
+      - ngb#0995
+      - ngbeslhang@gmail.com
 
 
 logging:
