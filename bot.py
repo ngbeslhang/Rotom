@@ -11,12 +11,13 @@ from discord.ext import commands
 class Bot(commands.Bot):
     """Bot class of Rotom, pretty self-explainatory"""
 
-    def __init__(self, config_file: str='config.yaml', **options):
+    def __init__(self, config_file: str='config.yml', **options):
         # For selfbots
         bot = options.get('bot', True)
 
         # Setting up language packs
         self._lang = self.load_lang('lang')
+        self.t = self._lang.get
 
         # Setting up logging
         file_hdlr = logging.FileHandler(
@@ -34,49 +35,49 @@ class Bot(commands.Bot):
         self.log.addHandler(file_hdlr)
         self.log.addHandler(stream_hdlr)
 
-        # del formatter, file_hdlr, stream_hdlr # Might have it's use
-
-        self.log.info("[LOGGING] Successfully set up logging system!")
+        self.log.info(self.t('logging.success'))
 
         # Loading config file. if the bot can't search for config file
         # with the passed filename, find template config file and rename it
         # to the provided filename if the token isn't empty.
         try:
-            self.log.info("[CONFIG] Attempting to load {}".format(config_file))
+            self.log.info(self.t('config.loading').format(config_file))
+
             with open(config_file, 'r') as c_yaml:
                 self.config = yaml.load(c_yaml)
-                self.load.info("[CONFIG] Success!")
+                self.load.info(self.t('config.success'))
+
+            if self.config['token'] is None:
+                self.log.error(self.t('config.no_token_error').format(config_file))
+
         except FileNotFoundError:
-            self.log.error("[CONFIG] Unable to find {}!".format(config_file))
+            self.log.error(self.t('config.file_not_found').format(config_file))
+
             try:
-                self.log.info(
-                    "[CONFIG] Attempting to load the template config file...")
-                with open('config_template.yaml', 'r') as c_yaml:
+                self.log.info(self.t('config.loading').format('config_template.yml'))
+
+                with open('config_template.yml', 'r') as c_yaml:
                     self.config = yaml.load(c_yaml)
-                    self.log.info("[CONFIG] Success!")
-                    self.log.info("[CONFIG] Checking if token isn't empty...")
+                    self.log.info(self.t('config.success'))
+                    self.log.info(self.t('config.check_token'))
 
                     if self.config['token'] is not None:
-                        self.log.info(
-                            "[CONFIG] Token isn't empty, the template config file "
-                            "will be renamed to the filename you have passed.")
+                        self.log.info(self.t('config.token_found'))
+                        self.log.info(self.t('config.rename').format('config_template.yml', config_file))
                         os.rename('config_template.yaml', config_file)
                     else:
-                        self.log.error(
-                            "[CONFIG] Please provide a token in the config file."
-                        )
+                        self.log.error(self.t('config.no_token_error').format('config.template.yml'))
                         sys.exit()
+
             except FileNotFoundError:
-                self.log.error("[CONFIG] Unable to find template config file! "
-                               "Please make sure that either config.yaml or "
-                               "config_template.yaml exist. You can check the "
-                               "GitHub repo for the config template.")
+                self.log.error(self.t('config.file_not_found').format('config_template.yml'))
+                self.log.error(self.t())
                 sys.exit()
 
         # Initializing commands.Bot
         super().__init__(
             command_prefix=commands.when_mentioned_or(), **options)
-        self.log.info("Self-initialized!")
+        self.log.info(self.t('bot.initialized'))
 
         # Initialize database
 
@@ -149,11 +150,34 @@ class Coglang:
         Parameters:
         `key`: `str` - Query that will be used to search for matching key.
         `separator`: `str` - `.` by default, the character that will be used to split the `key` param.
-        `no_prefix`: `bool` - `False` by default, check whenether if you want to use the `_prefix` key if it's in the 
-                     parent key of the requested key.'"""
-        # split the key
-        # search for it inside self_strings
-        # return None at KeyError
+        `no_prefix`: `bool` - `False` by default, check whenether if you want to use the `_prefix` key if it's in the parent key of the requested key.
+                              If no prefix was found in the top level object, no prefix will be used."""
+        temp = key.split(separator)
+        counter = 0
+
+        # Trying to search for prefix in the top level dict
+        try:
+            if no_prefix:
+                prefix = None
+            else:
+                prefix = self._strings[temp[0]]['_prefix']
+        except KeyError:
+            prefix = None
+
+        try:
+            for k in temp:
+                if temp[counter] is k and counter is 0:
+                    temp = self._strings[k]
+                else:
+                    temp = temp[k]
+                counter += 1
+
+            if prefix is None:
+                return temp
+            else:
+                return prefix + ' ' + temp
+        except KeyError:
+            return None
 
 # Builtin commands
 class Builtin:
