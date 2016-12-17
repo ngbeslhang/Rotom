@@ -4,8 +4,12 @@ import sys
 #import asyncio
 import logging
 import yaml
+
 import discord
 from discord.ext import commands
+
+import rethinkdb
+from rethinkdb.errors import ReqlDriverError, ReqlRuntimeError
 
 
 class Bot(commands.Bot):
@@ -45,7 +49,7 @@ class Bot(commands.Bot):
 
             with open(config_file, 'r') as c_yaml:
                 self.config = yaml.load(c_yaml)
-                self.load.info(self.t('config.success'))
+                self.log.info(self.t('config.success'))
 
             if self.config['token'] is None:
                 self.log.error(self.t('config.no_token_error').format(config_file))
@@ -80,7 +84,37 @@ class Bot(commands.Bot):
         self.log.info(self.t('bot.initialized'))
 
         # Initialize database
+        try:
+            self.log.info(self.t('db.connecting').format(
+                self.config['db']['host'],
+                self.config['db']['port']))
+            # Check if passwd is empty first before checking user
+            # Since RethinkDB can work with just username only
+            if self.config['db']['passwd'] is None:
+                if self.config['db']['user'] is None:
+                    self.config['db']['user'] = 'admin'
+                self._db_conn = rethinkdb.connect(
+                    self.config['db']['host'],
+                    self.config['db']['port']
+                    self.config['db']['user'])
+            else:
+                self._db_conn = rethinkdb.connect(
+                    self.config['db']['host'],
+                    self.config['db']['port']),
+                    user=self.config['db']['user'],
+                    password=self.config['db']['passwd'])
+            self.log.info(self.t('db.connect_success'))
+        except ReqlDriverError:
+            self.log.error(self.t('db.connect_fail'))
+            sys.exit()
 
+        try:
+            self.db = self._db_conn.db_create(self.config['db']['name'])
+            self.log.info(self.t('db.created_db').format(self.config['db']['name']))
+        except ReqlRuntimeError:
+            self.db = self._db_conn.db(self.config['db']['name'])
+            self.log.info(self.t('db.db_exist').format(self.config['db']['name']))
+        
     # Some discord.Embed objects with custom colors here
 
     def load_lang(self, path: str):
