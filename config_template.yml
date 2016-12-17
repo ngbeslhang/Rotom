@@ -16,7 +16,7 @@ shard_num  : 1 # Do NOT change the value if you don't know what exactly does it 
 db:
     name   : rotom
     host   : localhost
-    port   : 5984
+    port   : 28015
 
     user   : ~
     passwd : ~
