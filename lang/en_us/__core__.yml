@@ -27,6 +27,16 @@ config:
 
     check_exist: "Please check if either {} or config_template.yml exist."
 
+db:
+    _prefix: "[DB]"
+
+    connecting: "Connecting to {}:{}..."
+    connect_success: "Successfully connected!"
+    connect_fail: "Failed to connect!"
+
+    created_db: "Created database {} and using it since it doesn't exist."
+    db_exist: "Found database {}, will be using it from now on."
+
 bot:
     _prefix: "[BOT]"
     success: "Success!"
