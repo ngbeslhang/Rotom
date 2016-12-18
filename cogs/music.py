@@ -31,7 +31,7 @@ class Server:
     def __init__(self, text_channel):
         """text_channel - Text channel's ID"""
         self.text_channel = text_channel
-        self._queue = []  # for now
+        self._queue = asyncio.Queue()  # for now
 
 
 class Music:
