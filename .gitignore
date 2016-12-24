@@ -3,4 +3,3 @@ config.yaml
 __pycache__/
 abandoned/
 tags
-bot_old.py
