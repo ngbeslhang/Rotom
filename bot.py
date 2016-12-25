@@ -18,5 +18,5 @@ class Bot(commands.Bot):
         """Initialize Rotom.
         
         config : str  - Config file name.
-        bot    : bool -"""
+        bot    : bool - Check if the account is a bot, default to `True`."""
         self.bot = options.get('bot', True)
