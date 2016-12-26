@@ -22,4 +22,5 @@ class Bot(commands.Bot):
 class Language:
     """Class for coglang"""
 
-    def __init__(self, )
+    def __init__(self):
+        pass
