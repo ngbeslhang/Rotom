@@ -4,7 +4,7 @@
 **NOTE:** This repo is still WIP.
 
 # Requirement
-- Python 3.4+
+- Python 3.5+
   - `discord.py`
   - `rethinkdb`
   - `pyyaml`

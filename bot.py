@@ -1,7 +1,5 @@
 """Rotom's core"""
 import os
-import sys
-import asyncio
 import logging
 import yaml
 
@@ -20,3 +18,8 @@ class Bot(commands.Bot):
         config : str  - Config file name.
         bot    : bool - Check if the account is a bot, default to `True`."""
         self.bot = options.get('bot', True)
+
+class Language:
+    """Class for coglang"""
+
+    def __init__(self, )
