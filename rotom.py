@@ -1,5 +1,6 @@
 """Rotom's core"""
 import os
+import argparse
 import logging
 import yaml
 
@@ -12,15 +13,18 @@ from rethinkdb.errors import ReqlDriverError, ReqlRuntimeError
 class Bot(commands.Bot):
     """Bot class of Rotom derived from discord.ext.commands.Bot"""
 
-    def __init__(self, config: str='config.yml', **options):
+    def __init__(self, config: str='config.yml'):
         """Initialize Rotom.
         
-        config : str  - Config file name.
-        bot    : bool - Check if the account is a bot, default to `True`."""
-        self.bot = options.get('bot', True)
+        config : str  - Config file name."""
+        pass
 
 class Language:
     """Class for coglang"""
 
     def __init__(self):
         pass
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Runs Rotom.')
+    
