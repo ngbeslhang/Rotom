@@ -13,7 +13,7 @@ from rethinkdb.errors import ReqlDriverError, ReqlRuntimeError
 class Bot(commands.Bot):
     """Bot class of Rotom derived from discord.ext.commands.Bot"""
 
-    def __init__(self, config: str='config.yml'):
+    def __init__(self, config):
         """Initialize Rotom.
         
         config : str  - Config file name."""
@@ -26,5 +26,7 @@ class Language:
         pass
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Runs Rotom.')
-    
+    parser = argparse.ArgumentParser(description='Runs Rotom.', argument_default='config_template.yml')
+    parser.add_argument('config', type=str, help='Config file name, (default: config_templaye.yml)')
+    args = parser.parse_args()
+    rotom = Bot(args.config)
