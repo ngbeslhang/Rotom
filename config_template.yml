@@ -1,18 +1,19 @@
 # Config file for Rotom
+# Google "YAML tutorial" if you don't know how it works
 ---
-# Replace ~ with your bot token, otherwise the bot won't run
-token      : ~
-# Add owner(s)'s ID inside the array
-owner      : - YOUR DISCORD ID
-# If you can't figure out how to add it, Google "YAML collection example"
-prefix     : - ":"
-             - "::"
+bot:
+    token: YOUR_TOKEN
 
-init_status: ~ # Optional
-shard_num  : 1 # Do NOT change the value if you don't know what exactly does it do
+    owner: 
+    - YOUR DISCORD ID
+    prefix: 
+    - ":"
+    - "::"
 
-# If you don't know what is this section for, ignore it and
-# make sure you installed CouchDB and have it up and running
+    init_status: ~ # Optional
+    shard_num  : 1 # Do NOT change the value if you don't know what exactly is it
+
+# If you don't know what is this section for, ignore it and make sure you have RethinkDB up and running
 db:
     name   : rotom
     host   : localhost
@@ -21,8 +22,11 @@ db:
     user   : ~
     passwd : ~
 
-# If you don't know what is this section for, ignore it too
-# This section is mainly for bot devs and/or larger scale bots (250 or more servers)
+# Arguments to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
+args:
+    bot: True
+
+# If you don't know what is this section for, ignore it too, this section is mainly for bot devs
 api:
     # Put your API keys here to push server count to either sites
     # If you don't want to use it, set the value to "~"
