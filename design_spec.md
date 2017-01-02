@@ -35,3 +35,10 @@ print(locale('Hello, world!', 'zh_cn'))
 ```
 
 There should be no need for __info__.yaml, considering removing it
+
+## Guild-based settings tree (in database)
+```
+server_id
+|- superadmin: array (either role or member ID)
+|- moderator: array (either role or member ID)
+```
