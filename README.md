@@ -11,7 +11,9 @@
 - RethinkDB
 
 # Installation
-WIP
+**NOTE**: WIP
+## Beginner
+Run the provided Bash (`.sh`, ) / Batch (`.bat`, Windows) file.
 
 # Special thanks
 **NOTE**: Unless otherwise requested not to, anyone who helped me and/or contributed in any way will be added to here.
