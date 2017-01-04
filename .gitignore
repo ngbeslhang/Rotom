@@ -1,5 +1,6 @@
 .vscode/
 config.yaml
+config.yml
 __pycache__/
 abandoned/
 tags
