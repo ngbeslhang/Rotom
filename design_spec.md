@@ -20,6 +20,7 @@ class Cog:
 The returned class of `Bot.get_lang()` **MUST**:
 - have a required param `filename` and `path_obj` in `__init__()`
 - consist of `get()` function
+- consist of `reload()` function
 - have a local dictionary for YAML with the passed `filename` in each language pack
   - if unable to find any, set it as `None` instead
 
