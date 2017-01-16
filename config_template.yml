@@ -10,9 +10,6 @@ bot:
     - ":"
     - "::"
 
-    init_status: ~ # Optional
-    shard_num  : 1 # Do NOT change the value if you don't know what exactly is it
-
 # If you don't know what is this section for, ignore it and make sure you have RethinkDB up and running
 db:
     name   : rotom
@@ -22,13 +19,17 @@ db:
     user   : ~
     passwd : ~
 
-# Arguments to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
-args:
+# Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
+# Links for reference:
+# http://discordpy.readthedocs.io/en/latest/api.html#discord.Client
+# https://github.com/Rapptz/discord.py/blob/master/discord/ext/commands/bot.py#L146
+params:
     bot: True
 
 # If you don't know what is this section for, ignore it too, this section is mainly for bot devs
 api:
     # Put your API keys here to push server count to either sites
     # If you don't want to use it, set the value to "~"
-    carbonitex: ~
-    dbots     : ~
+    # You can add a basic definition of an API at api.yml
+    carbonitex : ~
+    dbots      : ~
