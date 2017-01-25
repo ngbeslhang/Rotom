@@ -3,6 +3,9 @@
 
 **NOTE:** This repo is still WIP.
 
+# TODO
+- Remove `api` section from `config_template.yml` and follow the way RoboDanny implemented Carbonitex (`api` folder in cogs)
+
 # Requirement
 - Python 3.5+
   - `discord.py`
