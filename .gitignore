@@ -4,3 +4,4 @@ config.yml
 __pycache__/
 abandoned/
 tags
+*.pyc
