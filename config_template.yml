@@ -20,7 +20,6 @@ db:
     passwd : ~
 
 # Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
-# Links for reference:
 # http://discordpy.readthedocs.io/en/latest/api.html#discord.Client
 # https://github.com/Rapptz/discord.py/blob/master/discord/ext/commands/bot.py#L146
 params:
@@ -28,8 +27,5 @@ params:
 
 # If you don't know what is this section for, ignore it too, this section is mainly for bot devs
 api:
-    # Put your API keys here to push server count to either sites
-    # If you don't want to use it, set the value to "~"
-    # You can add a basic definition of an API at api.yml
     carbonitex : ~
     dbots      : ~
