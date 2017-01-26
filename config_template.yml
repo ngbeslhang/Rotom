@@ -3,7 +3,6 @@
 ---
 bot:
     token: YOUR_TOKEN
-
     owner: 
     - YOUR DISCORD ID
     prefix: 
