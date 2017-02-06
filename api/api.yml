@@ -1,0 +1,7 @@
+rethinkdb:
+    name   : rotom
+    host   : localhost
+    port   : 28015
+
+    user   : ~
+    passwd : ~
