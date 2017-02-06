@@ -1,6 +1,7 @@
 """Rotom's core"""
 import sys
 import os
+import inspect
 import time
 import argparse
 import logging
@@ -9,12 +10,6 @@ import yaml
 
 import discord
 from discord.ext import commands
-
-import rethinkdb
-from rethinkdb.errors import ReqlDriverError, ReqlRuntimeError
-
-# Using async for RethinkDB
-rethinkdb.set_loop_type("asyncio")
 
 
 class Bot(commands.Bot):
@@ -67,6 +62,15 @@ class Bot(commands.Bot):
             self.log.error("Unable to find {}".format(config))
             sys.exit(2)
 
+        self.owner = conf['bot']['owner']
+
+        if conf['bot']['db'] is None:
+            self.use_db = False
+        else:
+            pass
+            # search for db module with db_<name>.py as name in cogs then import it as command.Bot extension
+            # otherwise, if not found set use_db as False
+
         # Unpacking config file's args
         super().__init__(self.when_mentioned_or(conf['bot']['prefix']), **conf['params'])
         self.run(conf['bot']['token'])
@@ -82,6 +86,30 @@ class Bot(commands.Bot):
             return r
 
         return inner
+
+    # Command checks (Some based on RoboDanny)
+    # def is_owner_check()
+
+    def get_api_conf(self):
+        """Gets config from API by searching matching config using caller module's name.
+        
+        If unable to find matching config, `None` will be returned instead."""
+        conf = None
+
+        with open(os.path.join(os.path.dirname(__file__), ''), 'r') as c:
+            conf = yaml.load(c)
+
+        # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
+        # Can also be used on get_lang()
+        frm = inspect.stack()[1]
+        module = inspect.getmodule(frm[0]).__name__
+
+        if module.startswith('db_') or module.startswith('api_'):
+            return conf[module.split('_')[1]]
+        else:
+            return conf[module]
+
+    # load_lang(), reload_lang() (could be set to be alias of load_lang() OR only reload modified files)
 
 
 class Language:
