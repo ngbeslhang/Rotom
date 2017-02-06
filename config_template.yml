@@ -8,23 +8,11 @@ bot:
     prefix: 
     - ":"
     - "::"
-
-# If you don't know what is this section for, ignore it and make sure you have RethinkDB up and running
-db:
-    name   : rotom
-    host   : localhost
-    port   : 28015
-
-    user   : ~
-    passwd : ~
+    # Enter the name of the database if you want to use it, otherwise enter ~ instead
+    db: ~
 
 # Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
 # http://discordpy.readthedocs.io/en/latest/api.html#discord.Client
 # https://github.com/Rapptz/discord.py/blob/master/discord/ext/commands/bot.py#L146
 params:
     bot: True
-
-# If you don't know what is this section for, ignore it too, this section is mainly for bot devs
-api:
-    carbonitex : ~
-    dbots      : ~
