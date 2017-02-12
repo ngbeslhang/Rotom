@@ -1,4 +1,4 @@
-***NOTE***: Everything here should be considered as self-notes, however suggestions are recommended.
+***NOTE***: Everything here should be considered as self-notes, however suggestions are welcomed.
 ## Language pack implementation
 A cog must be able to use the language system like this:
 
@@ -27,7 +27,7 @@ The returned class of `Bot.get_lang()` **MUST**:
 ***OR***
 
 Example translation file:
-```
+```yaml
 "Hello, world!": "您好世界"
 ```
 In Python:
@@ -35,7 +35,25 @@ In Python:
 print(locale('Hello, world!', 'zh_cn'))
 ```
 
+
 There should be no need for __info__.yaml, considering removing it
+***OR***
+
+Write a custom Bot.say() & inherited Embed class instead that checks message author's language preference (via database).
+Example translation file:
+```yaml
+"Hello, world!":     # The key itself would be considered as "en_us"
+  zh_cn: "你好，世界！"
+```
+Fetching translated string is as easy as:
+```py
+self.bot.say("Hello, world!") # replies with 你好，世界！" if user's lang pref is zh_cn
+
+# pass say() translate param if you don't want it to be automatically translated.
+self.bot.say("Hello, world!", translate=False) # Can be easily replaced with Ctrl+F'ing "translate=False"
+
+
+```
 
 ## Guild-based settings tree (in database)
 ```
