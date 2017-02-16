@@ -61,3 +61,6 @@ server_id
 |- superadmin: array (either role or member ID)
 |- moderator: array (either role or member ID)
 ```
+
+## Database specs
+Malena and Liara's suggestion: `table.get(key)` which means creating a new table class
