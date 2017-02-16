@@ -2,6 +2,7 @@
 import sys
 import os
 import inspect
+import asyncio
 import time
 import argparse
 import logging
@@ -62,10 +63,13 @@ class Bot(commands.Bot):
             self.log.error("Unable to find {}".format(config))
             sys.exit(2)
 
-        self.owner = conf['bot']['owner']
+        # using list() instead of set() allows anyone who have access to exec comment to modify it.
+        # + Can dynamically add owners w/o needing to restart the bot
+        # - Can lock owners out of access or malicious intents if the exec command was used improperly
+        self.owner = list(conf['bot']['owner'])
 
         if conf['bot']['db'] is None:
-            self.use_db = False
+            self.db = False
         else:
             pass
             # search for db module with db_<name>.py as name in cogs then import it as command.Bot extension
@@ -110,6 +114,8 @@ class Bot(commands.Bot):
             return conf[module]
 
     # load_lang(), reload_lang() (could be set to be alias of load_lang() OR only reload modified files)
+
+    # Considering if I should move builtin commands to Bot class or keep it separate.
 
 
 class Language:
