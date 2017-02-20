@@ -65,7 +65,7 @@ class Bot(commands.Bot):
 
         # using list() instead of set() allows anyone who have access to exec comment to modify it.
         # + Can dynamically add owners w/o needing to restart the bot
-        # - Can lock owners out of access or malicious intents if the exec command was used improperly
+        # - Can lock owners out of access or other malicious intents if the exec command was used improperly
         self.owner = list(conf['bot']['owner'])
 
         if conf['bot']['db'] is None:
