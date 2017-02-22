@@ -1,4 +1,8 @@
 ***NOTE***: Everything here should be considered as self-notes, however suggestions are welcomed.
+## `tldlist` command
+- Now that https://tld-list.com has updated their UI and introduced domain availability search I could scrap the site and create a command using the data.
+  - Aliases: `tld`, `domain`
+
 ## Language pack implementation
 A cog must be able to use the language system like this:
 
