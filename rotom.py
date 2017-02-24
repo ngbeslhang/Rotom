@@ -67,13 +67,15 @@ class Bot(commands.Bot):
         # + Can dynamically add owners w/o needing to restart the bot
         # - Can lock owners out of access or other malicious intents if the exec command was used improperly
         self.owner = list(conf['bot']['owner'])
+        self.bot = conf['params']
+        self.allow_bot = conf['bot']['allow_bot']
 
         if conf['bot']['db'] is None:
-            self.db = False
+            self.db = None
         else:
             pass
             # search for db module with db_<name>.py as name in cogs then import it as command.Bot extension
-            # otherwise, if not found set use_db as False
+            # otherwise, if not found set self.db as None
 
         # Unpacking config file's args
         super().__init__(self.when_mentioned_or(conf['bot']['prefix']), **conf['params'])
@@ -85,6 +87,7 @@ class Bot(commands.Bot):
         def inner(bot, msg):
             r = list(prefixes)
             r.append(commands.when_mentioned(bot, msg))
+            if self.db is not None:
             # If custom prefix is not None:
             # r.append(list(custom_prefix_list))
             return r
@@ -116,6 +119,14 @@ class Bot(commands.Bot):
     # load_lang(), reload_lang() (could be set to be alias of load_lang() OR only reload modified files)
 
     # Considering if I should move builtin commands to Bot class or keep it separate.
+
+    @asyncio.coroutine
+    def on_message(self, msg):
+        if message.author.bot:
+            if not self.allow_bot:
+                return
+                
+        yield from self.process_commands(msg)
 
 
 class Language:
