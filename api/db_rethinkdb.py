@@ -13,7 +13,7 @@ class DB:
     def __init__(self, bot):
         self.bot = bot
         self.conn = rethinkdb.connect()
-        self.bot.db
+        bot.db = self
     
     @asyncio.coroutine
     def create(self, table, key, value):
