@@ -2,7 +2,6 @@
 import sys
 import os
 import inspect
-import asyncio
 import time
 import argparse
 import logging
@@ -11,6 +10,8 @@ import yaml
 
 import discord
 from discord.ext import commands
+
+from .cogs import utils
 
 
 class Bot(commands.Bot):
@@ -67,7 +68,6 @@ class Bot(commands.Bot):
         # + Can dynamically add owners w/o needing to restart the bot
         # - Can lock owners out of access or other malicious intents if the exec command was used improperly
         self.owner = list(conf['bot']['owner'])
-        self.bot = conf['params']
         self.allow_bot = conf['bot']['allow_bot']
 
         if conf['bot']['db'] is None:
@@ -76,6 +76,9 @@ class Bot(commands.Bot):
             pass
             # search for db module with db_<name>.py as name in cogs then import it as command.Bot extension
             # otherwise, if not found set self.db as None
+
+        # Loading builtins
+        self.add_cog(Builtin(self))
 
         # Unpacking config file's args
         super().__init__(self.when_mentioned_or(conf['bot']['prefix']), **conf['params'])
@@ -117,23 +120,14 @@ class Bot(commands.Bot):
             return conf[module]
 
     # load_lang(), reload_lang() (could be set to be alias of load_lang() OR only reload modified files)
+    # both should be similar as get_api_conf()
 
-    # Considering if I should move builtin commands to Bot class or keep it separate.
-
-    @asyncio.coroutine
-    def on_message(self, msg):
+    async def on_message(self, msg):
         if message.author.bot:
             if not self.allow_bot:
                 return
                 
-        yield from self.process_commands(msg)
-
-
-class Language:
-    """Class for coglang"""
-
-    def __init__(self):
-        pass
+        await self.process_commands(msg)
 
 
 class Builtin:
@@ -141,6 +135,35 @@ class Builtin:
 
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command(name='eval', pass_context=True, hidden=True)
+    @utils.checks.is_owner()
+    async def _eval(self, ctx, *, code: str):
+        """Evaluates code, shamelessly copied from RoboDanny."""
+        code = code.strip('` ')
+        python = '```py\n{}\n```'
+        result = None
+
+        env = {
+            'bot': self.bot,
+            'ctx': ctx,
+            'message': ctx.message,
+            'server': ctx.message.server,
+            'channel': ctx.message.channel,
+            'author': ctx.message.author
+        }
+
+        env.update(globals())
+
+        try:
+            result = eval(code, env)
+            if inspect.isawaitable(result):
+                result = await result
+        except Exception as e:
+            await self.bot.say(python.format(type(e).__name__ + ': ' + str(e)))
+            return
+
+        await self.bot.say(python.format(result))
 
 
 if __name__ == '__main__':
