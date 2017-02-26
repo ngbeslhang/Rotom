@@ -91,6 +91,7 @@ class Bot(commands.Bot):
             r = list(prefixes)
             r.append(commands.when_mentioned(bot, msg))
             if self.db is not None:
+                pass
             # If custom prefix is not None:
             # r.append(list(custom_prefix_list))
             return r
@@ -123,7 +124,7 @@ class Bot(commands.Bot):
     # both should be similar as get_api_conf()
 
     async def on_message(self, msg):
-        if message.author.bot:
+        if msg.author.bot:
             if not self.allow_bot:
                 return
         
