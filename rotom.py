@@ -11,7 +11,7 @@ import yaml
 import discord
 from discord.ext import commands
 
-from .cogs import utils
+from cogs import utils
 
 
 class Bot(commands.Bot):
