@@ -60,6 +60,7 @@ class Bot(commands.Bot):
 
         del handler, formatter, now
 
+        # Loading config file
         try:
             with open(config) as c:
                 conf = yaml.load(c)
@@ -73,6 +74,7 @@ class Bot(commands.Bot):
         # - Can lock owners out of access or other malicious intents if the exec command was used improperly
         self.owner = list(conf['bot']['owner'])
         self.allow_bot = conf['bot']['allow_bot']
+        self.bot = not conf['bot']['selfbot']
 
         if conf['bot']['db'] is None:
             self.db = None
@@ -86,8 +88,8 @@ class Bot(commands.Bot):
 
         # Loading builtins
         self.add_cog(Builtin(self))
-        
-        self.run(conf['bot']['token'])
+
+        self.run(conf['bot']['token'], bot=self.bot)
 
     def when_mentioned_or(self, *prefixes):
         """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for custom per-server prefixes via database."""
@@ -133,7 +135,7 @@ class Bot(commands.Bot):
             if not self.allow_bot:
                 return
         
-        if self.self_bot and not self.user.bot:
+        if not self.bot:
             if msg.author.id != self.user.id:
                 return
 
