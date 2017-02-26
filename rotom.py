@@ -75,6 +75,7 @@ class Bot(commands.Bot):
         self.owner = list(conf['bot']['owner'])
         self.allow_bot = conf['bot']['allow_bot']
         self.bot = not conf['bot']['selfbot']
+        self.ready = False
 
         if conf['bot']['db'] is None:
             self.db = None
@@ -87,10 +88,13 @@ class Bot(commands.Bot):
         if conf['params'] is None:
             conf['params'] = {}
         super().__init__(self.when_mentioned_or(conf['bot']['prefix']), **conf['params'])
+        self.log.info("Initialized commands.Bot with config params.")
 
         # Loading builtins
         self.add_cog(Builtin(self))
+        self.log.info("Successfully loaded builtin command cog.")
 
+        self.log.info("Logging in using the provided token.")
         self.run(conf['bot']['token'], bot=self.bot)
 
     def when_mentioned_or(self, *prefixes):
@@ -132,6 +136,11 @@ class Bot(commands.Bot):
     # load_lang(), reload_lang() (could be set to be alias of load_lang() OR only reload modified files)
     # both should be similar as get_api_conf()
 
+    # Events
+    async def on_ready(self):
+        self.log.info("The bot is now ready to accept commands.")
+        self.ready = True
+
     async def on_message(self, msg):
         if msg.author.bot:
             if not self.allow_bot:
@@ -141,7 +150,8 @@ class Bot(commands.Bot):
             if msg.author.id != self.user.id:
                 return
 
-        await self.process_commands(msg)
+        if self.ready:
+            await self.process_commands(msg)
 
 
 class Builtin:
