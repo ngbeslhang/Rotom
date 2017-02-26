@@ -11,7 +11,7 @@ import yaml
 import discord
 from discord.ext import commands
 
-from cogs import utils
+from cogs import utils.checks
 
 
 class Bot(commands.Bot):
@@ -142,7 +142,7 @@ class Builtin:
         self.bot = bot
 
     @commands.command(name='eval', pass_context=True, hidden=True)
-    @utils.checks.is_owner()
+    @checks.is_owner()
     async def _eval(self, ctx, *, code: str):
         """Evaluates code, shamelessly copied from RoboDanny."""
         code = code.strip('` ')
