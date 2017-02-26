@@ -11,7 +11,6 @@ import yaml
 import discord
 from discord.ext import commands
 
-from . import cogs
 from cogs.utils import checks
 
 
