@@ -29,7 +29,7 @@ class Bot(commands.Bot):
         # Credits to Liara: https://github.com/Thessia/Liara/blob/master/liara.py#L83
         now = str(datetime.datetime.now()).replace(' ', '_').replace(':', '-').split('.')[0]
         formatter = logging.Formatter(
-            fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='GMT%z %Y-%m-%d %I:%M:%S%p')
+            fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='GMT%z %Y-%m-%d %I:%M:%S %p')
 
         self.log = logging.getLogger('rotom')
         if debug:
