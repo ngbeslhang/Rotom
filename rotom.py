@@ -84,6 +84,8 @@ class Bot(commands.Bot):
             # otherwise, if not found set self.db as None
 
         # Unpacking config file's args
+        if conf['params'] is None:
+            conf['params'] = {}
         super().__init__(self.when_mentioned_or(conf['bot']['prefix']), **conf['params'])
 
         # Loading builtins
