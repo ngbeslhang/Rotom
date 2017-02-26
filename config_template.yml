@@ -12,9 +12,9 @@ bot:
     db: ~
     # Choose to either parse bots' commands in their messages or not.
     allow_bot: no
+    selfbot: no
 
 # Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
 # http://discordpy.readthedocs.io/en/latest/api.html#discord.Client
 # https://github.com/Rapptz/discord.py/blob/master/discord/ext/commands/bot.py#L146
 params:
-    self_bot: no
