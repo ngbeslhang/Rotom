@@ -37,6 +37,10 @@ class Bot(commands.Bot):
         else:
             self.log.setLevel(logging.INFO)
 
+        # Creates a log folder if it doesn't exist just in case
+        if not os.path.exists("logs/"):
+            os.makedirs("logs/")
+        
         handler = logging.FileHandler('logs/rotom_{}.log'.format(now))
         handler.setFormatter(formatter)
         self.log.addHandler(handler)
