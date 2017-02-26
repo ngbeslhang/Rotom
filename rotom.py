@@ -81,8 +81,8 @@ class Bot(commands.Bot):
             # search for db module with db_<name>.py as name in cogs then import it as command.Bot extension
             # otherwise, if not found set self.db as None
 
-        # Loading builtins
-        self.add_cog(Builtin(self))
+        # Loading builtin commands
+        self.add_command(self._eval)
 
         # Unpacking config file's args
         super().__init__(self.when_mentioned_or(conf['bot']['prefix']), **conf['params'])
@@ -127,24 +127,7 @@ class Bot(commands.Bot):
     # load_lang(), reload_lang() (could be set to be alias of load_lang() OR only reload modified files)
     # both should be similar as get_api_conf()
 
-    async def on_message(self, msg):
-        if msg.author.bot:
-            if not self.allow_bot:
-                return
-        
-        if self.self_bot and not self.user.bot:
-            if msg.author.id != self.user.id:
-                return
-
-        await self.process_commands(msg)
-
-
-class Builtin:
-    """Builtin commands cog"""
-
-    def __init__(self, bot):
-        self.bot = bot
-
+    # Builtin commands
     @commands.command(name='eval', pass_context=True, hidden=True)
     @checks.is_owner()
     async def _eval(self, ctx, *, code: str):
@@ -154,7 +137,7 @@ class Builtin:
         result = None
 
         env = {
-            'bot': self.bot,
+            'bot': self,
             'ctx': ctx,
             'message': ctx.message,
             'server': ctx.message.server,
@@ -169,10 +152,21 @@ class Builtin:
             if inspect.isawaitable(result):
                 result = await result
         except Exception as e:
-            await self.bot.say(python.format(type(e).__name__ + ': ' + str(e)))
+            await self.say(python.format(type(e).__name__ + ': ' + str(e)))
             return
 
-        await self.bot.say(python.format(result))
+        await self.say(python.format(result))
+
+    async def on_message(self, msg):
+        if msg.author.bot:
+            if not self.allow_bot:
+                return
+        
+        if self.self_bot and not self.user.bot:
+            if msg.author.id != self.user.id:
+                return
+
+        await self.process_commands(msg)
 
 
 if __name__ == '__main__':
