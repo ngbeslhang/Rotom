@@ -146,9 +146,9 @@ class Bot(commands.Bot):
             if not self.allow_bot:
                 return
         
-        #if not self.bot:
-        #    if msg.author.id != self.user.id:
-        #        return
+        if not self.bot:
+            if msg.author.id != self.user.id:
+                return
 
         if self.ready:
             await self.process_commands(msg)
