@@ -126,7 +126,11 @@ class Bot(commands.Bot):
         if message.author.bot:
             if not self.allow_bot:
                 return
-                
+        
+        if self.self_bot and not self.user.bot:
+            if msg.author.id != self.user.id:
+                return
+
         await self.process_commands(msg)
 
 
