@@ -74,8 +74,12 @@ class Bot(commands.Bot):
         # - Can lock owners out of access or other malicious intents if the exec command was used improperly
         self.owner = list(conf['bot']['owner'])
         self.allow_bot = conf['bot']['allow_bot']
-        self.bot = not conf['bot']['selfbot']
         self.ready = False
+
+        try:
+            self.is_bot = not conf['params']['self_bot']
+        except KeyError:
+            self.is_bot = True
 
         if conf['bot']['db'] is None:
             self.db = None
@@ -85,9 +89,16 @@ class Bot(commands.Bot):
             # otherwise, if not found set self.db as None
 
         # Unpacking config file's args
-        if conf['params'] is None:
-            conf['params'] = {}
-        super().__init__(self.when_mentioned_or(conf['bot']['prefix']), **conf['params'])
+        params = conf['params']
+        if params is None:
+            params = {}
+
+        # Updating params with other params
+        params.update({
+            "command_prefix": self.when_mentioned_or(conf['bot']['prefix'])
+        })
+
+        super().__init__(**params)
         self.log.info("Initialized commands.Bot with config params.")
 
         # Loading builtins
@@ -95,14 +106,26 @@ class Bot(commands.Bot):
         self.log.info("Successfully loaded builtin command cog.")
 
         self.log.info("Logging in using the provided token.")
-        self.run(conf['bot']['token'], bot=self.bot)
+        self.run(conf['bot']['token'], bot=self.is_bot)
 
     def when_mentioned_or(self, *prefixes):
         """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for custom per-server prefixes via database."""
 
         def inner(bot, msg):
-            r = list(prefixes)
+            r = []
+            
+            # Check if there's possible list/tuples
+            # Just in case PyYAML converts digit-only etc prefixes into numbers, all of them will be appended as str
+            for a in prefixes:
+                if type(a) in (list, tuple):
+                    for b in a:
+                        r.append(str(b))
+                else:
+                    r.append(str(a))
+
             r.append(commands.when_mentioned(bot, msg))
+
+            # Check if there's custom prefix
             if self.db is not None:
                 pass
             # If custom prefix is not None:
@@ -145,25 +168,20 @@ class Bot(commands.Bot):
         if msg.author.bot:
             if not self.allow_bot:
                 return
-        
-        if not self.bot:
-            if msg.author.id != self.user.id:
-                return
 
         if self.ready:
+            #self.log.info("{0.content}".format(msg))
             await self.process_commands(msg)
 
 
 class Builtin:
-    """Builtin commands cog"""
-
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='eval', pass_context=True, hidden=True)
+    @commands.command(pass_context=True, hidden=True, aliases=['eval'])
     @checks.is_owner()
-    async def _eval(self, ctx, *, code: str):
-        """Evaluates code, shamelessly copied from RoboDanny."""
+    async def debug(self, ctx, *, code : str):
+        """Evaluates code, shamelessly copied from Robo Danny."""
         code = code.strip('` ')
         python = '```py\n{}\n```'
         result = None
@@ -188,7 +206,6 @@ class Builtin:
             return
 
         await self.bot.say(python.format(result))
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Runs Rotom.')
