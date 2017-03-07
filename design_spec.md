@@ -39,11 +39,10 @@ In Python:
 print(locale('Hello, world!', 'zh_cn'))
 ```
 
-
 There should be no need for __info__.yaml, considering removing it
 ***OR***
 
-Write a custom Bot.say() & inherited Embed class instead that checks message author's language preference (via database).
+Write a custom Bot.say(), other relevant functions & inherited Embed class instead that checks message author's language preference (via database).
 Example translation file:
 ```yaml
 "Hello, world!":     # The key itself would be considered as "en_us"
