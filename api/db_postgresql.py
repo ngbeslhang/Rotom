@@ -1,10 +1,6 @@
-"""RethinkDB database cog for Rotom"""
+"""PostgreSQL database cog for Rotom using asyncpg"""
 import asyncio
-import rethinkdb
-from rethinkdb.errors import ReqlDriverError, ReqlRuntimeError
-
-# Using async for RethinkDB
-rethinkdb.set_loop_type("asyncio")
+import asyncpg
 
 
 class DB:
@@ -12,11 +8,10 @@ class DB:
 
     def __init__(self, bot):
         self.bot = bot
-        self.conn = rethinkdb.connect()
+        self.connection = await asyncpg.create_pool()
         bot.db = self
     
-    @asyncio.coroutine
-    def create(self, table, key, value):
+    async def create(self, table, key, value):
         """Creates a new key with the value.
         
         `table`
@@ -25,8 +20,7 @@ class DB:
         **NOTE**:"""
         pass
     
-    @asyncio.coroutine
-    def edit(self, table, key, value):
+    async def edit(self, table, key, value):
         """Edits the key with a new value.
         
         `table` - The table name, usually the server ID.
@@ -34,16 +28,10 @@ class DB:
         `value` - The new value which will be assigned to the key."""
         pass
 
-    @asyncio.coroutine
-    def get(self, table, key):
+
+    async def get(self, table, key):
         pass
 
-    @asyncio.coroutine
-    def delete(self, table, key):
+    async def delete(self, table, key):
         pass
 
-#name   : rotom
-#host   : localhost
-#port   : 28015
-#user   : ~
-#passwd : ~

@@ -1,7 +1,10 @@
-rethinkdb:
-    name   : rotom
+postgresql:
+    # If DSN is filled up by anything other than null, it will use that instead of the values below
+    dsn: ~ 
+
+    db     : rotom
     host   : localhost
-    port   : 28015
+    port   : 5432
 
     user   : ~
     passwd : ~
