@@ -4,7 +4,7 @@ import asyncpg
 
 
 class DB:
-    """RethinkDB module for Rotom."""
+    """PostgreSQL module for Rotom."""
 
     def __init__(self, bot):
         self.bot = bot
