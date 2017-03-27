@@ -53,17 +53,62 @@ Fetching translated string is as easy as:
 self.bot.say("Hello, world!") # replies with 你好，世界！" if user's lang pref is zh_cn
 
 # pass say() translate param if you don't want it to be automatically translated.
-self.bot.say("Hello, world!", translate=False) # Can be easily replaced with Ctrl+F'ing "translate=False"
+self.bot.say("Hello, world!", translate=False) # Can be easily replaced with Ctrl+F'ing "translate=False" if you want to use cogs that contains this on other bots
 
+# lang param will be required if there's no database module loaded
 
 ```
 
-## Guild-based settings tree (in database)
+## Object tree (in database)
 ```
-server_id
-|- superadmin: array (either role or member ID)
-|- moderator: array (either role or member ID)
+id
+|- type "server"
+|-- superuser: array (either role or member ID, server owner's ID included)
+|-- admin: array (either role or member ID)
 ```
+**NOTE**: Bot owner(s), by default, is a superuser of *all servers the bot is in* so the bot owner(s) will be able to provide support to any servers using their bot.
+
+**NOTE**: Superuser and admin WILL BE ENTIRELY SEPARATE. Superuser cannot perform any adminstration commands while admin can. 
+- But let's be honest that could be bypassed with built-in eval command anyway, and it's an essential command for bot support, which means a certain trust between the bot owner(s) and the server owner(s) is **needed**. The eval command will log who and what code did said person run.
 
 ## Database specs
 Malena and Liara's suggestion: `table.get(key)` which means creating a new table class
+
+# Music
+## Auto Pause/Unpause
+~~Definitely not~~ Inspired by HcgRandon's Ayana.
+- Pause the current song and list when there's no listeners (aka non-bots) in the VC for minutes (able to set via config file)
+
+## `play/add` Command
+- Usage: `play/add <link/tag> [from time/start|till time/end|from time/start till time/end (in MM:SS format) ]`
+  - Example: `play BRAIN POWER from 1:00 till end` or `play BRAIN POWER from 1:00` assuming that `BRAIN POWER` is a tag 
+- Supports YouTube/SoundCloud/Twitch
+- Supports playing from/until a time/ within the period
+
+
+## `song` Command
+- Only the requester, superusers/admins (user/roles) and bot owner can control the current song.
+  - To prevent infinite loop abuse, the superusers/admins (user/roles) can set how many times can a song repeat/restart/goto
+    - By default unless they are specifically specified as infinite, if only one was set the value applies to the rest as well
+      - This also applies to how many times can the same link get added into the queue.
+    -  If majority of the listeners in a server wanted to repeat a song infinitely it's already remedied by local-storage system 
+- `play`
+- `pause`
+- `restart`
+- `goto <time (in MM:SS format)>`
+- `repeat`
+
+## `skip` Command
+- Skips either the current song, the `playlist` (if it was requested) or `queue`
+
+## `queue` command
+- `repeat`
+- `shuffle`
+
+## Music local-storage system
+**NOTE**: A way to prevent getting IP banned by YouTube for scraping too much.
+- Either store it locally or fetch the files from other servers
+
+## `get` and `set` command groups
+- `role`
+  - 
