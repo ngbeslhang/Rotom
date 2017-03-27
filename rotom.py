@@ -96,7 +96,7 @@ class Bot(commands.Bot):
             params = {}
 
         # Updating params with other params
-        params.update({"command_prefix": self.when_mentioned_or(conf['bot']['prefix'])})
+        params.update({"command_prefix": self.when_mentioned_or(*conf['bot']['prefix'])})
 
         super().__init__(**params)
         self.log.info("Initialized commands.Bot with config params.")
@@ -114,14 +114,9 @@ class Bot(commands.Bot):
         def inner(bot, msg):
             r = []
 
-            # Check if there's possible list/tuples
             # Just in case PyYAML converts digit-only etc prefixes into numbers, all of them will be appended as str
             for a in prefixes:
-                if type(a) in (list, tuple):
-                    for b in a:
-                        r.append(str(b))
-                else:
-                    r.append(str(a))
+                r.append(str(a))
 
             r.append(commands.when_mentioned(bot, msg))
 
