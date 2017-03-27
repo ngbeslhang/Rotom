@@ -112,7 +112,7 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 ## `get` and `set` command groups
 - `role`
   - SET (syntax: `set role`)
-    - At this point it requires a multiline codeblock for 
+    - At this point it requires a multiline codeblock in YAML for settings
 - `info from` (in a way replaces `userinfo`)
   - GET (syntax: `get info from <object>`)
     - User/channel/role name/ID/mention
@@ -128,3 +128,6 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
   - Supports multiple cog names at once, separated by space
 - `lang/language`
   - Supports multiple lang names at once, separated by space
+
+## API
+- Pretty much essential for multiserver communication (for region-based music playing mainly)
