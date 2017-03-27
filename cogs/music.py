@@ -45,9 +45,8 @@ class Music:
         self.bot = bot
         self._servers = {}
 
-    @asyncio.coroutine
     @command(aliases=['add'], pass_context=True)
-    def play(self, ctx, *, query: str):
+    async def play(self, ctx, *, query: str):
         """Check the query and pass it to player accordingly."""
         try:
             if self.bot.voice_client_in():
@@ -100,8 +99,7 @@ class Music:
         queue.append(MusicEntry(player, s, ctx.message.author))
 
     '''
-    @asyncio.coroutine
-    def _create_player(self, query, client, *, ytdl_options=None, **kwargs):
+    async def _create_player(self, query, client, *, ytdl_options=None, **kwargs):
         """Creates a player, partially based on discord.VoiceClient.create_ytdl_player
         
         query: str
