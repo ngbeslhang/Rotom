@@ -112,12 +112,7 @@ class Bot(commands.Bot):
         """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for custom per-server prefixes via database."""
 
         def inner(bot, msg):
-            r = []
-
-            # Just in case PyYAML converts digit-only etc prefixes into numbers, all of them will be appended as str
-            for a in prefixes:
-                r.append(str(a))
-
+            r = list(prefixes)
             r.append(commands.when_mentioned(bot, msg))
 
             # Check if there's custom prefix
