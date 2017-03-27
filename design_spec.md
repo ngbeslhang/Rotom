@@ -112,7 +112,10 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 ## `get` and `set` command groups
 - `role`
   - SET (syntax: `set role`)
-    - At this point it requires a multiline codeblock in YAML for settings
+    - At this point it requires a multiline codeblock in YAML-esque config for settings
+      - ```yaml
+        why
+  - 
 - `info from` (in a way replaces `userinfo`)
   - GET (syntax: `get info from <object>`)
     - User/channel/role name/ID/mention
@@ -131,3 +134,6 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 
 ## API
 - Pretty much essential for multiserver communication (for region-based music playing mainly)
+
+## Annnnd other people's requests
+- https://owo.whats-th.is/ce77f8.png https://owo.whats-th.is/bbc4ac.png (okay not too shabby actually)
