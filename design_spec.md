@@ -111,4 +111,20 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 
 ## `get` and `set` command groups
 - `role`
-  - 
+  - SET (syntax: `set role`)
+    - At this point it requires a multiline codeblock for 
+- `info from` (in a way replaces `userinfo`)
+  - GET (syntax: `get info from <object>`)
+    - User/channel/role name/ID/mention
+      - For name search:
+        - User: the default choice, but for the sake of it, `u:` or `user:` prefix, case-insensitive
+        - Channel: add a `c:` or `channel:` prefix, case-insensitive
+        - Role: add a `r:` or `role:` prefix, case-insensitive
+    - `server`
+    - `bot`
+
+## `load` and `unload` bot-owner command groups
+- `cog/cogs`
+  - Supports multiple cog names at once, separated by space
+- `lang/language`
+  - Supports multiple lang names at once, separated by space
