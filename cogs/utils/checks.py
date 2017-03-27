@@ -32,6 +32,10 @@ def is_admin_check(ctx):
     # Always true no matter what, that way database also don't need to record server owner's ID
     if ctx.message.author.id is ctx.message.server.owner.id:
         return True
+    
+    # If the bot is run in selfbot mode, return True since if they can't ban they lack permission to anyways
+    if ctx.bot.is_bot is False:
+        return True
 
     if ctx.bot.db is None:
         return (ctx.bot.defaults['admin'] is not None and 
