@@ -30,7 +30,7 @@ def is_superuser():
 # Admin check
 def is_admin_check(ctx):
     # Always true no matter what, that way database also don't need to record server owner's ID
-    if ctx.message.author.id in (ctx.message.server.owner.id, *ctx.bot.owner):
+    if ctx.message.author.id is ctx.message.server.owner.id:
         return True
 
     if ctx.bot.db is None:
