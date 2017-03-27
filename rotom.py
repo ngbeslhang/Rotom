@@ -40,7 +40,7 @@ class Bot(commands.Bot):
         # Creates a log folder if it doesn't exist just in case
         if not os.path.exists("logs/"):
             os.makedirs("logs/")
-        
+
         handler = logging.FileHandler('logs/rotom_{}.log'.format(now))
         handler.setFormatter(formatter)
         self.log.addHandler(handler)
@@ -69,11 +69,13 @@ class Bot(commands.Bot):
             self.log.error("Unable to find {}".format(config))
             sys.exit(2)
 
-        # using list() instead of set() allows anyone who have access to exec comment to modify it.
+        # using list() instead of tuple() allows anyone who have access to exec command to modify it.
         # + Can dynamically add owners w/o needing to restart the bot
         # - Can lock owners out of access or other malicious intents if the exec command was used improperly
-        self.owner = list(conf['bot']['owner'])
+        # But for security issues let's just use tuple()
+        self.owner = tuple(conf['bot']['owner'])
         self.allow_bot = conf['bot']['allow_bot']
+        self.defaults = conf['defaults']
         self.ready = False
 
         try:
@@ -94,9 +96,7 @@ class Bot(commands.Bot):
             params = {}
 
         # Updating params with other params
-        params.update({
-            "command_prefix": self.when_mentioned_or(conf['bot']['prefix'])
-        })
+        params.update({"command_prefix": self.when_mentioned_or(conf['bot']['prefix'])})
 
         super().__init__(**params)
         self.log.info("Initialized commands.Bot with config params.")
@@ -113,7 +113,7 @@ class Bot(commands.Bot):
 
         def inner(bot, msg):
             r = []
-            
+
             # Check if there's possible list/tuples
             # Just in case PyYAML converts digit-only etc prefixes into numbers, all of them will be appended as str
             for a in prefixes:
@@ -158,6 +158,24 @@ class Bot(commands.Bot):
 
     # load_lang(), reload_lang() (could be set to be alias of load_lang() OR only reload modified files)
     # both should be similar as get_api_conf()
+    def _say(self, lang: str="", *args, **kwargs):
+        """Modified discord.ext.commands.bot.say() for localization support.
+        
+        If unable to find matching string, the key (aka default language) will be returned instead."""
+        conf = None
+
+        with open(os.path.join(os.path.dirname(__file__), ''), 'r') as c:
+            conf = yaml.load(c)
+
+        # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
+        # Can also be used on get_lang()
+        frm = inspect.stack()[1]
+        module = inspect.getmodule(frm[0]).__name__
+
+        if module.startswith('db_') or module.startswith('api_'):
+            return conf[module.split('_')[1]]
+        else:
+            return conf[module]
 
     # Events
     async def on_ready(self):
@@ -180,7 +198,7 @@ class Builtin:
 
     @commands.command(pass_context=True, hidden=True, aliases=['eval'])
     @checks.is_owner()
-    async def debug(self, ctx, *, code : str):
+    async def debug(self, ctx, *, code: str):
         """Evaluates code, shamelessly copied from Robo Danny."""
         code = code.strip('` ')
         python = '```py\n{}\n```'
@@ -201,11 +219,21 @@ class Builtin:
             result = eval(code, env)
             if inspect.isawaitable(result):
                 result = await result
+            # Should we include channel in the log?
+            self.log.info(
+                "[EVAL] {0.author.name} ({0.author.id}) ran `{1}` in {0.server.name} ({0.server.id}).".
+                format(ctx.message, code))
         except Exception as e:
             await self.bot.say(python.format(type(e).__name__ + ': ' + str(e)))
+
+            self.log.info(
+                "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` in {0.server.name} ({0.server.id}) but was met with `{2}: {3}`.".
+                format(ctx.message, code, type(e).__name__, str(e)))
+
             return
 
         await self.bot.say(python.format(result))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Runs Rotom.')
