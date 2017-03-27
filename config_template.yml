@@ -32,7 +32,7 @@ cogs:
     whitelist: ~
     # Otherwise, if you don't want the bot to autoload any cogs, use this option
     # This is also useful if you don't want to load any cogs at start for debugging etc. purpose
-    autoload: no
+    autoload: yes
 
 defaults:
     # Default rolename settings, ~ for none, capitalization DOESN'T matter, will not be used in selfbot mode
