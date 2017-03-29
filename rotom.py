@@ -219,7 +219,7 @@ class Builtin:
                 "[EVAL] {0.author.name} ({0.author.id}) ran `{1}` in {0.server.name} ({0.server.id}).".
                 format(ctx.message, code))
         except Exception as e:
-            await self.bot.say(python.format(type(e).__name__ + ': ' + str(e)))
+            await self.bot.say(code, python.format(type(e).__name__ + ': ' + str(e)))
 
             self.bot.log.info(
                 "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` in {0.server.name} ({0.server.id}) but was met with `{2}: {3}`.".
