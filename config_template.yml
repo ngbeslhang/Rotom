@@ -31,6 +31,7 @@ cogs:
     autoload: yes
 
     # ONLY EITHER WILL BE USED, they will be loaded in order, so e.g. if whitelist isn't empty it will be used instead.
+    # NOTE: The lists won't block load cogs command from working.
 
     # If not ~, make the bot load *only* the cog(s) listed when bot is initialized
     whitelist: ~
