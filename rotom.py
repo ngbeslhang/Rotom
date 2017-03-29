@@ -172,7 +172,7 @@ class Bot(commands.Bot):
     # Events
     async def on_ready(self):
         if self.is_bot is not True:
-            self.owner = tuple(self.user.id)
+            self.owner = tuple([self.user.id])
             self.log.info("Selfbot mode detected! Ownerlist has been rewritten to this account's ID.")
         self.log.info("The bot is now ready to accept commands.")
         self.ready = True
