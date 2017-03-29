@@ -69,6 +69,12 @@ class Bot(commands.Bot):
             self.log.error("Unable to find {}".format(config))
             sys.exit(2)
 
+
+        try:
+            self.is_bot = not conf['params']['self_bot']
+        except KeyError:
+            self.is_bot = True
+        
         # using list() instead of tuple() allows anyone who have access to exec command to modify it.
         # + Can dynamically add owners w/o needing to restart the bot
         # - Can lock owners out of access or other malicious intents if the exec command was used improperly
@@ -78,11 +84,6 @@ class Bot(commands.Bot):
         self.allow_bot = conf['bot']['allow_bot']
         self.defaults = conf['defaults']
         self.ready = False
-
-        try:
-            self.is_bot = not conf['params']['self_bot']
-        except KeyError:
-            self.is_bot = True
 
         if conf['bot']['db'] is None:
             self.db = None
@@ -170,6 +171,9 @@ class Bot(commands.Bot):
 
     # Events
     async def on_ready(self):
+        if self.is_bot is not True:
+            self.owner = tuple(self.user.id)
+            self.log.info("Selfbot mode detected! Ownerlist has been rewritten to this account's ID.")
         self.log.info("The bot is now ready to accept commands.")
         self.ready = True
 
