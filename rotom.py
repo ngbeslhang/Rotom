@@ -73,7 +73,8 @@ class Bot(commands.Bot):
         # + Can dynamically add owners w/o needing to restart the bot
         # - Can lock owners out of access or other malicious intents if the exec command was used improperly
         # But for security issues let's just use tuple()
-        self.owner = tuple(conf['bot']['owner'])
+        if self.is_bot:
+            self.owner = tuple(conf['bot']['owner'])
         self.allow_bot = conf['bot']['allow_bot']
         self.defaults = conf['defaults']
         self.ready = False
@@ -189,9 +190,9 @@ class Builtin:
     @commands.command(pass_context=True, hidden=True, aliases=['eval'])
     @checks.is_owner()
     async def debug(self, ctx, *, code: str):
-        """Evaluates code, shamelessly copied from Robo Danny."""
+        """Evaluates code, shamelessly copied and sightly modified from Robo Danny."""
         code = code.strip('` ')
-        python = '```py\n{}\n```'
+        python = '```py\n>>> {}\n{}\n```'
         result = None
 
         env = {
@@ -221,8 +222,9 @@ class Builtin:
                 format(ctx.message, code, type(e).__name__, str(e)))
 
             return
-
-        await self.bot.say(python.format(result))
+        
+        await self.bot.delete_message(ctx.message)
+        await self.bot.say(python.format(code, result))
 
 
 if __name__ == '__main__':
