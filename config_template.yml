@@ -26,13 +26,16 @@ bot:
 # Check what cogs to load, by default all .py files in cogs/ folder will be loaded.
 # Both blacklist and whitelist must be in either collection or list containing the cog name.
 cogs:
-    # If not ~, stops the bot from loading listed cog(s) when bot is initialized
-    blacklist: ~
-    # If not ~, make the bot load *only* the cog(s) listed when bot is initialized
-    whitelist: ~
-    # Otherwise, if you don't want the bot to autoload any cogs, use this option
+    # If you don't want the bot to autoload any cogs, use this option
     # This is also useful if you don't want to load any cogs at start for debugging etc. purpose
     autoload: yes
+
+    # ONLY EITHER WILL BE USED, they will be loaded in order, so e.g. if whitelist isn't empty it will be used instead.
+
+    # If not ~, make the bot load *only* the cog(s) listed when bot is initialized
+    whitelist: ~
+    # If not ~, stops the bot from loading listed cog(s) when bot is initialized
+    disallow: ~
 
 defaults:
     # Default rolename settings, ~ for none, capitalization DOESN'T matter, will not be used in selfbot mode
