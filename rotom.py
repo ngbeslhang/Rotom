@@ -8,9 +8,9 @@ import logging
 import datetime
 import yaml
 
-import discord
+#import discord
 from discord.ext import commands
-
+from pathlib import Path
 from cogs.utils import checks
 
 
@@ -106,6 +106,28 @@ class Bot(commands.Bot):
         # Loading builtins
         self.add_cog(Builtin(self))
         self.log.info("Successfully loaded builtin command cog.")
+
+        # Loading cogs
+        if conf['cogs']['autoload']:
+            p = Path('./cogs')
+            if conf['cogs']['only_allow'] is not None:
+                try:
+                    for cog in conf['cogs']['only_allow']:
+                        self.load_extension('cogs.' + cog)
+                        self.log.info("Successfully loaded cog \"{}\".".format(cog))
+                except:
+                    self.log.error("Error encountered while trying to load cog!")
+                    raise
+                    sys.exit(2)
+            elif conf['cogs']['disallow'] is not None:
+                for child in p.iterdir():
+                    if child.is_file():
+                        if child.strip('.py') not in conf['cogs']['disallow']:
+                            self.load_extension('cogs.' + child.strip('.py'))
+            else:
+                for child in p.iterdir():
+                    if child.is_file():
+                        self.load_extension('cogs.' + child.strip('.py'))
 
         self.log.info("Logging in using the provided token.")
         self.run(conf['bot']['token'], bot=self.is_bot)
