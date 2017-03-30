@@ -41,7 +41,7 @@ class Bot(commands.Bot):
         if not os.path.exists("logs/"):
             os.makedirs("logs/")
 
-        handler = logging.FileHandler('logs/rotom_{}.log'.format(now))
+        handler = logging.FileHandler('logs/rotom-{}_{}.log'.format(config, now))
         handler.setFormatter(formatter)
         self.log.addHandler(handler)
 
@@ -53,7 +53,7 @@ class Bot(commands.Bot):
         self.discord_log = logging.getLogger('discord')
         self.discord_log.setLevel(logging.INFO)
 
-        handler = logging.FileHandler('logs/discord_{}.log'.format(now))
+        handler = logging.FileHandler('logs/discord-{}_{}.log'.format(config, now))
         handler.setFormatter(formatter)
         self.discord_log.addHandler(handler)
         self.log.info("Successfully set up discord.py logging")
