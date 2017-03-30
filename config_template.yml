@@ -34,7 +34,7 @@ cogs:
     # NOTE: The lists won't block load cogs command from working.
 
     # If not ~, make the bot load *only* the cog(s) listed when bot is initialized
-    allow: ~
+    only_allow: ~
     # If not ~, stops the bot from loading listed cog(s) when bot is initialized
     disallow: ~
 
