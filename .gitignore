@@ -9,8 +9,6 @@
 #*.pyc
 
 *
-cogs/porn.py
-cogs/porn/
 
 !api/
 !cogs/
