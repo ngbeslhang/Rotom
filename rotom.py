@@ -238,13 +238,13 @@ class Builtin:
                 result = await result
             # Should we include channel in the log?
             self.bot.log.info(
-                "[EVAL] {0.author.name} ({0.author.id}) ran `{1}` in {0.server.id}.".
+                "[EVAL] {0.author.name} ({0.author.id}) ran `{1}`.".
                 format(ctx.message, code))
         except Exception as e:
             await self.bot.say(python.format(code, type(e).__name__ + ': ' + str(e)))
 
             self.bot.log.info(
-                "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` in {0.server.id} but was met with `{2}: {3}`.".
+                "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` but was met with `{2}: {3}`.".
                 format(ctx.message, code, type(e).__name__, str(e)))
 
             return
