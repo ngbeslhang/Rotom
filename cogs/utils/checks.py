@@ -43,3 +43,10 @@ def is_admin_check(ctx):
 
 def is_admin():
     return commands.check(lambda ctx: is_admin_check(ctx))
+
+# /r/Pokemon Discord check, it will be the base for Allowed-by-guild check
+def allowed_by_pkmn_check(ctx):
+    return ctx.message.server.id == "111504456838819840"
+
+def allowed_by_pkmn():
+    return commands.check(lambda ctx: allowed_by_pkmn_check(ctx))
