@@ -1,15 +1,4 @@
-#.vscode/
-#config.yaml
-#config.yml
-
-#__pycache__/
-#logs/
-#abandoned/
-#tags
-#*.pyc
-
 *
-cogs/quak.py
 
 !api/
 !cogs/

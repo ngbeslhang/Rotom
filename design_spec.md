@@ -109,14 +109,16 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 **NOTE**: A way to prevent getting IP banned by YouTube for scraping too much.
 - Either store it locally or fetch the files from other servers
 
-## `get` and `set` command groups
+## `get`, `set`, `give` and `remove` command groups
 - `role`
   - SET (syntax: `set role`)
-    - At this point it requires a multiline codeblock in YAML-esque config for settings
+    - At this point it requires a multiline codeblock in YAML config for settings
       - ```yaml
-        why
+        <command name in getset.py>:
+          
+        ```
   - 
-- `info from` (in a way replaces `userinfo`)
+- `info from/ info` (in a way replaces `userinfo`)
   - GET (syntax: `get info from <object>`)
     - User/channel/role name/ID/mention
       - For name search:
