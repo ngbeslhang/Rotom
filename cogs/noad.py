@@ -19,8 +19,7 @@ class NoAd:
                                 "{0} Your message has been deleted because: Your message contains an invite link.".format(msg.author.mention))
 
                             try:
-                                em = discord.Embed()
-                                em.colour = discord.Colour().orange()
+                                em = discord.Embed(colour=discord.Colour(value=None).orange())
 
                                 if msg.author.avatar_url is not None:
                                     em.set_author(name=str(msg.author), icon_url=msg.author.avatar_url)
