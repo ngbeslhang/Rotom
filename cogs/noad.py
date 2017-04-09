@@ -7,14 +7,12 @@ class NoAd:
         self.bot = bot
 
     async def on_message(self, msg):
-        roles = ['111505380638519296',
-                 '117242433091141636',
-                 '126430648951898112',
-                 '278331223775117313']
+        roles = [s for s in msg.server.roles if s.name.lower() in ["mods", "reddit mods", "bot", "regoodras"]]
 
-        if msg.server.id == '111504456838819840':
-            if "discord.gg/pokemon" not in msg.content:
+        # 111504456838819840 Pokemon discord
+        if msg.server.id == '180250773181956096':
                 if ("discord.gg/" in msg.content and 
+                        "discord.gg/pokemon" not in msg.content and
                         [r.id for r in msg.author.roles] not in roles or
                         msg.channel.id != '270033143996612608'):
                             await self.bot.delete_message(msg)
@@ -23,9 +21,9 @@ class NoAd:
 
                             try:
                                 em = discord.Embed(title="SOMEONE POSTED AN INVITE")
-                                em.add_field("Content", msg.content)
-                                em.add_field("Message ID", msg.id, inline=True)
-                                em.add_field("Posted at", msg.channel.name, inline=True)
+                                em.add_field(name="Content", value=msg.content, inline=False)
+                                em.add_field(name="Message ID", value=msg.id)
+                                em.add_field(name="Posted at", value=msg.channel.name)
 
                                 await self.bot.send_message(
                                     msg.server.get_channel('272438017745223681'),
