@@ -11,10 +11,11 @@ class NoAd:
 
         # 111504456838819840 Pokemon discord
         if msg.server.id == '180250773181956096':
-                if "discord.gg/" in msg.content:
-                    if "discord.gg/pokemon" not in msg.content:
-                        # 270033143996612608
-                        if msg.channel.id != '180261884979576832' or any(e in [r.id for r in msg.author.roles] for e in roles) is False:
+            if "discord.gg/" in msg.content:
+                if "discord.gg/pokemon" not in msg.content:
+                    # 270033143996612608
+                    if msg.channel.id != '180261884979576832':
+                        if any(e in [r.id for r in msg.author.roles] for e in roles) is False:
                             await self.bot.delete_message(msg)
                             await self.bot.send_message(msg.channel, 
                                 "{0} Your message has been deleted because: Your message contains an invite link.".format(msg.author.mention))
