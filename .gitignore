@@ -1,12 +1,11 @@
-*
+*.yml
+*.yaml
+*.json
+logs/
+cogs/meme/
+cogs/quak.py
+.vscode/
+.cache/
+__pycache__/
 
-!api/
-!cogs/
-!lang/
-!__init__.py
-!.gitignore
 !config_template.yml
-!design_spec.md
-!LICENSE
-!README.md
-!rotom.py
