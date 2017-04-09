@@ -20,14 +20,19 @@ class NoAd:
 
                             try:
                                 em = discord.Embed(title="SOMEONE POSTED AN INVITE")
+
+                                if msg.author.avatar_url is not None:
+                                    em.set_author(name=msg.author.name, icon_url=msg.author.avatar_url)
+                                else:
+                                    em.set_author(name=msg.author.name, icon_url=msg.author.default_avatar_url)
                                 em.add_field(name="Content", value=msg.content, inline=False)
+                                em.add_field(name="User ID", value=msg.author.id)
                                 em.add_field(name="Message ID", value=msg.id)
                                 em.add_field(name="Posted at", value=msg.channel.name)
 
                                 await self.bot.send_message(
                                     msg.server.get_channel('272438017745223681'),
-                                    "{0.name} `{0.id}`".format(msg.author),
-                                    embed=em
+                                    None, embed=em
                                 )
                             except (Forbidden, NotFound, InvalidArgument):
                                 self.bot.log.warning("[NoAd] Channel not found!")
