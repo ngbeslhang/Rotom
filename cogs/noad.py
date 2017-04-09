@@ -9,15 +9,11 @@ class NoAd:
     async def on_message(self, msg):
         roles = [s.id for s in msg.server.roles if s.name.lower() in ["mods", "reddit mods", "bots", "regoodras"]]
 
-        # 111504456838819840 Pokemon discord
-        if msg.server.id == '180250773181956096':
+        if msg.server.id == '111504456838819840':
             if "discord.gg/" in msg.content:
                 if "discord.gg/pokemon" not in msg.content:
-                    # 270033143996612608
-                    if msg.channel.id != '180261884979576832':
+                    if msg.channel.id != '270033143996612608':
                         if any(e in [r.id for r in msg.author.roles] for e in roles) is False:
-                            self.bot.send_message(msg.channel, "```{}```".format([r.id for r in msg.author.roles]))
-                            self.bot.send_message(msg.channel, "```{}```".format(roles))
                             await self.bot.delete_message(msg)
                             await self.bot.send_message(msg.channel, 
                                 "{0} Your message has been deleted because: Your message contains an invite link.".format(msg.author.mention))
