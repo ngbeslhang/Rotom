@@ -7,7 +7,7 @@ class NoAd:
         self.bot = bot
 
     async def on_message(self, msg):
-        roles = [s.id for s in msg.server.roles if s.name.lower() in ["mods", "reddit mods", "bots", "regoodras"]]
+        roles = ['111505380638519296', '117242433091141636', '126430648951898112', '278331223775117313']
 
         if msg.server.id == '111504456838819840':
             if "discord.gg/" in msg.content:
