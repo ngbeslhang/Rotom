@@ -16,8 +16,8 @@ class NoAd:
                     # 270033143996612608
                     if msg.channel.id != '180261884979576832':
                         if any(e in [r.id for r in msg.author.roles] for e in roles) is False:
-                            self.bot.say("```{}```".format([r.id for r in msg.author.roles]))
-                            self.bot.say("```{}```".format(roles))
+                            self.bot.send_message(msg.channel, "```{}```".format([r.id for r in msg.author.roles]))
+                            self.bot.send_message(msg.channel, "```{}```".format(roles))
                             await self.bot.delete_message(msg)
                             await self.bot.send_message(msg.channel, 
                                 "{0} Your message has been deleted because: Your message contains an invite link.".format(msg.author.mention))
