@@ -7,7 +7,7 @@ class NoAd:
         self.bot = bot
 
     async def on_message(self, msg):
-        roles = [s for s in msg.server.roles if s.name.lower() in ["mods", "reddit mods", "bot", "regoodras"]]
+        roles = [s.id for s in msg.server.roles if s.name.lower() in ["mods", "reddit mods", "bot", "regoodras"]]
 
         # 111504456838819840 Pokemon discord
         if msg.server.id == '180250773181956096':
