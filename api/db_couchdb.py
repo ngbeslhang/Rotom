@@ -1,5 +1,6 @@
 """Couchbase database cog for Rotom"""
 import aiohttp
+import json
 
 class DB:
     """Database module for Rotom."""
@@ -18,8 +19,32 @@ class DB:
                 self.bot.log.error("[DB] Unable to connect to the database! Are you sure it's launched?")
                 self.bot.db = None
             else:
-                pass
+                content = json.loads(r.content)
 
+                try:
+                    if content['ok'] is True:
+                        self.bot.log.info("[DB] Successfully connected to database!")
+                except KeyError:
+                    if content['error'] == "not_found":
+                        self.bot.log.warning("[DB] Database not found! A new one will be created instead.")
+
+                        async with self._session.put(self._url) as c:
+                            if r.status != 200:
+                                self.bot.log.error("[DB] Unable to connect to the database!")
+                                self.bot.db = None
+                            else:
+                                d = json.loads(c.content)
+                                try:
+                                    if content['ok'] is True:
+                                        self.bot.log.info("[DB] Database successfully created!")
+                                except KeyError:
+                                    self.bot.log.error("[DB] Unable to create database!")
+                                    self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(d))
+                                    self.bot.db = None
+                    else:
+                        self.bot.log.error("[DB] Error!")
+                        self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(content))
+                        self.bot.db = None
     
     async def insert(self, id, key, value):
         pass
