@@ -63,7 +63,7 @@ class Bot(commands.Bot):
         # Loading config file
         try:
             with open(config) as c:
-                conf = yaml.load(c)
+                conf = yaml.safe_load(c)
                 self.log.info("Successfully loaded config file {}".format(config))
         except FileNotFoundError:
             self.log.error("Unable to find {}".format(config))
@@ -158,7 +158,7 @@ class Bot(commands.Bot):
         conf = None
 
         with open(os.path.join(os.path.dirname(__file__), ''), 'r') as c:
-            conf = yaml.load(c)
+            conf = yaml.safe_load(c)
 
         # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
         # Can also be used on get_lang()
@@ -179,7 +179,7 @@ class Bot(commands.Bot):
         conf = None
 
         with open(os.path.join(os.path.dirname(__file__), ''), 'r') as c:
-            conf = yaml.load(c)
+            conf = yaml.safe_load(c)
 
         # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
         # Can also be used on get_lang()
