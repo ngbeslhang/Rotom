@@ -109,17 +109,26 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 **NOTE**: A way to prevent getting IP banned by YouTube for scraping too much.
 - Either store it locally or fetch the files from other servers
 
-## `get`, `set`, `give` and `remove` command groups
+## Tags system (`get`, `set`, `give`, `remove` and `block` command groups)
 - `role`
-  - SET (syntax: `set role`)
-    - At this point it requires a multiline codeblock in YAML config for settings
-      - ```yaml
-        <command name in getset.py>:
-          
+  - SET (e.g. `set role <role tag>`)
+    - At this point it requires a multiline codeblock in YAML config for settings and will be loaded with YAML parser.
+      - In a way JSON is also supported since YAML parser is also technically a JSON parser.
+      - `safe_load()` will be used.
+      - Format:
+        ```yaml
+        <tag>:
+          who_can_get:
+
         ```
-  - 
-- `info from/ info` (in a way replaces `userinfo`)
-  - GET (syntax: `get info from <object>`)
+        Example:
+        ```yaml
+        mature:
+        ```
+  - GET (e.g. `get role <role tag>`)
+- `info` (in a way replaces `userinfo`)
+  - Aliases: `info from`, `details`, `details from`
+  - GET (e.g. `get info from <object>`)
     - User/channel/role name/ID/mention
       - For name search:
         - User: the default choice, but for the sake of it, `u:` or `user:` prefix, case-insensitive
@@ -127,6 +136,15 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
         - Role: add a `r:` or `role:` prefix, case-insensitive
     - `server`
     - `bot`
+- `setting`
+  - Aliases: `settings`
+  - GET (e.g. `get setting from <tag>`)
+    - Aliases: `setting from`, `settings from`
+  - SET (e.g. `set settings of <tag>`)
+    - Aliases: `setting of`, `settings of`
+- Generic tags
+
+**NOTE**: Unless specified otherwise, if a tag type isn't mentioned in the subcommand it means it's not usable for said type.
 
 ## `load` and `unload` bot-owner command groups
 - `cog/cogs`
