@@ -15,10 +15,7 @@
 ### Modules
 - `discord.py`
 - `pyyaml`
-
-## Optional (note that quite a few features won't work w/o it)
-
-- PostgreSQL
+- CouchDB
 
 # Installation
 
