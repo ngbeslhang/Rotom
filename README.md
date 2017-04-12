@@ -14,7 +14,7 @@
 
 ### Modules
 - `discord.py`
-- `pyyaml`
+- `ruamel.yaml`
 - CouchDB
 
 # Installation

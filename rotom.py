@@ -6,7 +6,7 @@ import time
 import argparse
 import logging
 import datetime
-import yaml
+from ruamel import yaml
 
 #import discord
 from discord.ext import commands
