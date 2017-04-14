@@ -44,3 +44,18 @@ class NoAd:
 
 def setup(bot):
     bot.add_cog(NoAd(bot))
+
+# Planning to add memedog block feature
+"""
+╭━━━━╮               This is memedog. Help
+╰┃ ┣▇━▇                memedog take over 
+ ┃ ┃  ╰━▅╮ Discord by pasting
+ ╰┳╯ ╰━━┳╯ him in 10 other
+  ╰╮ ┳━━╯     servers or he will
+ ▕▔▋ ╰╮╭━╮ never be a memedog
+╱▔╲▋╰━┻┻╮╲╱▔▔▔╲
+▏  ▔▔▔▔▔▔▔  O O┃ 
+╲╱▔╲▂▂▂▂╱▔╲▂▂▂╱
+ ▏╳▕▇▇▕ ▏╳▕▇▇▕
+ ╲▂╱╲▂╱ ╲▂╱╲▂╱
+"""
