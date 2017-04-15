@@ -142,7 +142,10 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
     - Aliases: `setting from`, `settings from`
   - SET (e.g. `set settings of <tag>`)
     - Aliases: `setting of`, `settings of`
-- Generic tags
+- Tag types
+  - Generic
+  - Music
+    - Compactible with Rotom's music cog
 
 **NOTE**: Unless specified otherwise, if a tag type isn't mentioned in the subcommand it means it's not usable for said type.
 
