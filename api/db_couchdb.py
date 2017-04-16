@@ -29,6 +29,7 @@ class DB:
                             self.bot.log.info("[DB] Database successfully created!")
                         else:
                             self.bot.log.error("[DB] Unable to create database!")
+                            temp = None
                             async for line in r.content:
                                 temp = json.loads(line)
                             self.bot.log.error(
@@ -36,6 +37,7 @@ class DB:
                             self.bot.db = None
                 else:
                     self.bot.log.error("[DB] Unknown error!")
+                    temp = None
                     async for line in r.content:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
@@ -78,6 +80,7 @@ class DB:
                     self.bot.log.info("[DB] Object successfully created")
                 else:
                     self.bot.log.error("[DB] Unable to create object!")
+                    temp = None
                     async for line in r.content:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
@@ -102,6 +105,7 @@ class DB:
 
         try:
             async with self._session.get(self._url + "/{}".format(obj.id)) as r:
+                temp = None
                 async for line in r.content:
                     temp = json.loads(line)
 
@@ -116,6 +120,7 @@ class DB:
                     self.bot.log.info("[DB] Object successfully updated")
                 else:
                     self.bot.log.error("[DB] Unable to update object!")
+                    temp = None
                     async for line in r.content:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
@@ -137,6 +142,7 @@ class DB:
 
         try:
             async with self._session.get(self._url + "/{}".format(obj.id)) as r:
+                temp = None
                 async for line in r.content:
                     temp = json.loads(line)
 
@@ -153,4 +159,41 @@ class DB:
             return None
 
     async def delete(self, obj):
-        pass
+        """Delete the object from database.
+
+        `obj` - The object or its ID (either int or str), usually discord.py objects'."""
+
+        if type(obj) in (Server, Channel, PrivateChannel, Member, User):
+            obj = obj.id
+        elif type(obj) in (str, int):
+            pass
+        else:
+            raise ValueError("The object must be either discord.Server/Channel/User, int or str.")
+        
+        rev = None
+
+        try:
+            async with self._session.get(self._url + "/{}".format(obj.id)) as r:
+                temp = None
+                async for line in r.content:
+                    temp = json.loads(line)
+
+                if r.status == 200:
+                    rev = temp['_rev']
+                else:
+                    self.bot.log.error("[DB] Unable to update object!")
+                    self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
+
+            async with self._session.put(self._url + "/{}?rev={}".format(obj.id, rev)) as r:
+                if r.status == 200:
+                    self.bot.log.info("[DB] Object successfully updated")
+                else:
+                    self.bot.log.error("[DB] Unable to update object!")
+                    temp = None
+                    async for line in r.content:
+                        temp = json.loads(line)
+                    self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
+        except Exception as e:
+            self.bot.log.error("[DB] Unknown error while trying to update object!")
+            self.bot.log.error("Error: {}, Reason: {}".format(type(e).__name__, str(e)))
+            raise e
