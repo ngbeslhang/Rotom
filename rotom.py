@@ -6,6 +6,7 @@ import time
 import argparse
 import logging
 import datetime
+import asyncio
 from ruamel import yaml
 
 #import discord
@@ -250,6 +251,7 @@ class Builtin:
             return
         
         await self.bot.delete_message(ctx.message)
+        asyncio.sleep(0.1)
         await self.bot.say(python.format(code, result))
 
 
