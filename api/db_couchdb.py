@@ -9,7 +9,6 @@ class DB:
 
     def __init__(self, bot):
         self.bot = bot
-        self.bot.db = self
         self.bot.loop.run_until_complete(self.init_db())
 
     async def init_db(self):
@@ -20,7 +19,7 @@ class DB:
             async with self._session.get(self._url) as r:
                 if r.status == 200:
                     self.bot.log.info("[DB] Successfully connected to database!")
-                    return True
+                    self.bot.db = self
                 elif r.status == 404:
                     self.bot.log.warning(
                         "[DB] Database not found! A new one will be created instead.")
@@ -28,7 +27,7 @@ class DB:
                     async with self._session.put(self._url) as r:
                         if r.status == 201:
                             self.bot.log.info("[DB] Database successfully created!")
-                            return True
+                            self.bot.db = self
                         else:
                             self.bot.log.error("[DB] Unable to create database!")
                             temp = None
@@ -36,23 +35,17 @@ class DB:
                                 temp = json.loads(line)
                             self.bot.log.error(
                                 "[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
-                            self.bot.db = None
-                            return False
                 else:
                     self.bot.log.error("[DB] Unknown error!")
                     temp = None
                     async for line in r.content:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
-                    self.bot.db = None
-                    return False
         except Exception as e:
             self.bot.log.error(
                 "[DB] Unable to connect to the database! Are you sure it's launched?")
-            self.bot.db = None
             self.bot.log.error("[DB] Unknown error while trying to connect to server!")
             self.bot.log.error("Error: {}, Reason: {}".format(type(e).__name__, str(e)))
-            return False
 
     async def create(self, obj, data: dict={}):
         """Creates a new database object.
