@@ -25,6 +25,8 @@ class Bot(commands.Bot):
 
         config : str  - Config file name.
         debug  : bool - Debug mode, pass `True` to enable, `False` otherwise."""
+        self.boot_time = time.time()
+        self.config_name = config.strip('config_')
 
         # Initialize logging
         self._init_log(config, debug)
@@ -85,10 +87,8 @@ class Bot(commands.Bot):
         self.log.info("Logging in using the provided token.")
         self.run(conf['bot']['token'], bot=self.is_bot)
 
-    def _init_log(self, config, debug):
+    def _init_log(self, debug):
         """Initialize logging"""
-        self.boot_time = time.time()
-
         # Credits to Liara: https://github.com/Thessia/Liara/blob/master/liara.py#L83
         now = str(datetime.datetime.now()).replace(' ', '_').replace(':', '-').split('.')[0]
         formatter = logging.Formatter(
@@ -104,7 +104,7 @@ class Bot(commands.Bot):
         if not os.path.exists("logs/"):
             os.makedirs("logs/")
 
-        handler = logging.FileHandler('logs/rotom-{}_{}.log'.format(config, now))
+        handler = logging.FileHandler('logs/rotom-{}_{}.log'.format(self.config_name, now))
         handler.setFormatter(formatter)
         self.log.addHandler(handler)
 
@@ -116,7 +116,7 @@ class Bot(commands.Bot):
         self.discord_log = logging.getLogger('discord')
         self.discord_log.setLevel(logging.INFO)
 
-        handler = logging.FileHandler('logs/discord-{}_{}.log'.format(config, now))
+        handler = logging.FileHandler('logs/discord-{}_{}.log'.format(self.config_name, now))
         handler.setFormatter(formatter)
         self.discord_log.addHandler(handler)
         self.log.info("Successfully set up discord.py logging")
