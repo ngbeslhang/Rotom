@@ -25,6 +25,68 @@ class Bot(commands.Bot):
 
         config : str  - Config file name.
         debug  : bool - Debug mode, pass `True` to enable, `False` otherwise."""
+
+        # Initialize logging
+        self._init_log(config, debug)
+
+        # Loading config file
+        try:
+            with open(config) as c:
+                conf = yaml.safe_load(c)
+                self.log.info("Successfully loaded config file {}".format(config))
+        except FileNotFoundError:
+            self.log.error("Unable to find {}".format(config))
+            sys.exit(2)
+
+        try:
+            self.is_bot = not conf['params']['self_bot']
+        except KeyError:
+            self.is_bot = True
+        
+        # using list() instead of tuple() allows anyone who have access to exec command to modify it.
+        # + Can dynamically add owners w/o needing to restart the bot
+        # - Can lock owners out of access or other malicious intents if the exec command was used improperly
+        # But for security issues let's just use tuple()
+        if self.is_bot:
+            self.owner = tuple(conf['bot']['owner'])
+        self.allow_bot = conf['bot']['allow_bot']
+        self.defaults = conf['defaults']
+        self.ready = False
+
+        self.db = None
+
+        if conf['bot']['db'] is not None:
+            self.bot.load_extension("api.db_{}".format(conf['bot']['db']))
+            if self.db is not None:
+                self.log.info("Successfully initialized database!")
+            else:
+                self.log.error("Database not initialized!")
+        else:
+            self.log.info("Database not loaded.")
+
+        # Unpacking config file's args
+        params = conf['params']
+        if params is None:
+            params = {}
+
+        # Updating params with other params
+        params.update({"command_prefix": self.when_mentioned_or(*conf['bot']['prefix'])})
+
+        super().__init__(**params)
+        self.log.info("Initialized commands.Bot with config params.")
+
+        # Loading builtins
+        self.add_cog(Builtin(self))
+        self.log.info("Successfully loaded builtin command cog.")
+
+        # Loading cogs
+        self._init_cogs(conf)
+
+        self.log.info("Logging in using the provided token.")
+        self.run(conf['bot']['token'], bot=self.is_bot)
+
+    def _init_log(self, config, debug):
+        """Initialize logging"""
         self.boot_time = time.time()
 
         # Credits to Liara: https://github.com/Thessia/Liara/blob/master/liara.py#L83
@@ -59,56 +121,7 @@ class Bot(commands.Bot):
         self.discord_log.addHandler(handler)
         self.log.info("Successfully set up discord.py logging")
 
-        del handler, formatter, now
-
-        # Loading config file
-        try:
-            with open(config) as c:
-                conf = yaml.safe_load(c)
-                self.log.info("Successfully loaded config file {}".format(config))
-        except FileNotFoundError:
-            self.log.error("Unable to find {}".format(config))
-            sys.exit(2)
-
-
-        try:
-            self.is_bot = not conf['params']['self_bot']
-        except KeyError:
-            self.is_bot = True
-        
-        # using list() instead of tuple() allows anyone who have access to exec command to modify it.
-        # + Can dynamically add owners w/o needing to restart the bot
-        # - Can lock owners out of access or other malicious intents if the exec command was used improperly
-        # But for security issues let's just use tuple()
-        if self.is_bot:
-            self.owner = tuple(conf['bot']['owner'])
-        self.allow_bot = conf['bot']['allow_bot']
-        self.defaults = conf['defaults']
-        self.ready = False
-
-        if conf['bot']['db'] is None:
-            self.db = None
-        else:
-            pass
-            # search for db module with db_<name>.py as name in cogs then import it as command.Bot extension
-            # otherwise, if not found set self.db as None
-
-        # Unpacking config file's args
-        params = conf['params']
-        if params is None:
-            params = {}
-
-        # Updating params with other params
-        params.update({"command_prefix": self.when_mentioned_or(*conf['bot']['prefix'])})
-
-        super().__init__(**params)
-        self.log.info("Initialized commands.Bot with config params.")
-
-        # Loading builtins
-        self.add_cog(Builtin(self))
-        self.log.info("Successfully loaded builtin command cog.")
-
-        # Loading cogs
+    def _init_cogs(self, conf):
         if conf['cogs']['autoload']:
             p = Path('./cogs')
             if conf['cogs']['only_allow'] is not None:
@@ -130,11 +143,17 @@ class Bot(commands.Bot):
                     if child.is_file():
                         self.load_extension('cogs.' + child.strip('.py'))
 
-        self.log.info("Logging in using the provided token.")
-        self.run(conf['bot']['token'], bot=self.is_bot)
 
     def when_mentioned_or(self, *prefixes):
-        """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for custom per-server prefixes via database."""
+        """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for 
+        custom per-server prefixes via database.
+        
+        Added a fix for a bug that process_command() will only use the first matching prefix, thus
+        if someone uses different-length same-char prefixes in order of shortest length the longer
+        will be considered a CommandNotFound error.
+        
+        e.g. [':', '::'] as prefix, process_command only match `::help` with prefix ':', thus the bot
+        will return error regarding `:help` not being a command."""
 
         def inner(bot, msg):
             r = list(prefixes)
@@ -145,6 +164,7 @@ class Bot(commands.Bot):
                 pass
             # If custom prefix is not None:
             # r.append(list(custom_prefix_list))
+            r = sorted(r, key=len, reverse=True)
             return r
 
         return inner
