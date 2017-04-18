@@ -9,7 +9,7 @@ import datetime
 import asyncio
 from ruamel import yaml
 
-#import discord
+import discord
 from discord.ext import commands
 from pathlib import Path
 from cogs.utils import checks

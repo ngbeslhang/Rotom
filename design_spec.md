@@ -109,7 +109,30 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 **NOTE**: A way to prevent getting IP banned by YouTube for scraping too much.
 - Either store it locally or fetch the files from other servers
 
-## Tags system (`get`, `set/edit/create`, `give`, `remove` and `block` command groups)
+## Tags system (`get`, `set/edit/create`, `give`, `remove/delete` and `block` command groups)
+### Available specifiers for `<object>`s
+**NOTE**: String section is only used when the object is known, for example the bot itself would be `bot`
+- Guild:
+  - String
+    `guild`
+    `server`
+    `the guild`
+    `the server`
+- Bot itself
+  - String
+    - `bot`
+    - `the bot`
+### `get`
+- `role <tag/role>`
+  - Gives role to the user
+- `role <tag/role> for <user>`
+  - Gives role to specified user (ONLY WHEN SAID USER HAVE PERMISSION)
+- `info from <object>`
+- `info of <object>`
+  - Object could be either a `server`/`guild` string, a channel (mention/name/id), a user (mention/name/id) or `bot`/`the bot` string
+
+
+
 - `role`
   - SET (e.g. `set role <role tag>`)
     - At this point it requires a multiline codeblock in YAML config for settings and will be loaded with YAML parser.
