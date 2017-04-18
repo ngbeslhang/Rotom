@@ -109,7 +109,7 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 **NOTE**: A way to prevent getting IP banned by YouTube for scraping too much.
 - Either store it locally or fetch the files from other servers
 
-## Tags system (`get`, `set`, `give`, `remove` and `block` command groups)
+## Tags system (`get`, `set/edit/create`, `give`, `remove` and `block` command groups)
 - `role`
   - SET (e.g. `set role <role tag>`)
     - At this point it requires a multiline codeblock in YAML config for settings and will be loaded with YAML parser.
@@ -146,6 +146,7 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
   - Generic
   - Music
     - Compactible with Rotom's music cog
+- Regex will be used to parse subcommands
 
 **NOTE**: Unless specified otherwise, if a tag type isn't mentioned in the subcommand it means it's not usable for said type.
 
