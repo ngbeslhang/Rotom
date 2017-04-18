@@ -13,7 +13,8 @@ class DB:
 
     async def init_db(self):
         self._session = aiohttp.ClientSession(loop=self.bot.loop)
-        self._url = "http://{0[host]}:{0[port]}/{0[db]}".format(self.bot.get_api_conf())
+        self._url = "http://{0[host]}:{0[port]}/{0[db]}_{1}".format(self.bot.get_api_conf(),
+                                                                    self.bot.config_name)
 
         try:
             async with self._session.get(self._url) as r:
@@ -181,7 +182,7 @@ class DB:
             pass
         else:
             raise ValueError("The object must be either discord.Server/Channel/User, int or str.")
-        
+
         rev = None
 
         try:
