@@ -20,6 +20,7 @@ class DB:
             async with self._session.get(self._url) as r:
                 if r.status == 200:
                     self.bot.log.info("[DB] Successfully connected to database!")
+                    return True
                 elif r.status == 404:
                     self.bot.log.warning(
                         "[DB] Database not found! A new one will be created instead.")
@@ -27,6 +28,7 @@ class DB:
                     async with self._session.put(self._url) as r:
                         if r.status == 201:
                             self.bot.log.info("[DB] Database successfully created!")
+                            return True
                         else:
                             self.bot.log.error("[DB] Unable to create database!")
                             temp = None
@@ -35,6 +37,7 @@ class DB:
                             self.bot.log.error(
                                 "[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
                             self.bot.db = None
+                            return False
                 else:
                     self.bot.log.error("[DB] Unknown error!")
                     temp = None
@@ -42,12 +45,14 @@ class DB:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
                     self.bot.db = None
+                    return False
         except Exception as e:
             self.bot.log.error(
                 "[DB] Unable to connect to the database! Are you sure it's launched?")
             self.bot.db = None
             self.bot.log.error("[DB] Unknown error while trying to connect to server!")
             self.bot.log.error("Error: {}, Reason: {}".format(type(e).__name__, str(e)))
+            return False
 
     async def create(self, obj, data: dict={}):
         """Creates a new database object.
@@ -76,19 +81,23 @@ class DB:
 
         try:
             async with self._session.put(self._url + "/{}".format(obj.id), data=data) as r:
-                if r.status == 201:
+                if r.status in (201, 202):
                     self.bot.log.info("[DB] Object successfully created")
+                    return True
+                elif r.status == 409:
+                    self.bot.log.info("[DB] Object conflict!")
+                    return False
                 else:
                     self.bot.log.error("[DB] Unable to create object!")
                     temp = None
                     async for line in r.content:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
-                    self.bot.db = None
+                    return False
         except Exception as e:
             self.bot.log.error("[DB] Unknown error while trying to create object!")
-            self.bot.db = None
             self.bot.log.error("Error: {}, Reason: {}".format(type(e).__name__, str(e)))
+            return False
 
     async def update(self, obj, data: dict):
         """Updates the object with provided dictionary.
@@ -102,6 +111,7 @@ class DB:
             pass
         else:
             raise ValueError("The object must be either discord.Server/Channel/User, int or str.")
+            return False
 
         try:
             async with self._session.get(self._url + "/{}".format(obj.id)) as r:
@@ -111,23 +121,32 @@ class DB:
 
                 if r.status == 200:
                     data.update({"_rev": temp['_rev']})
+                elif r.status == 404:
+                    return False
                 else:
                     self.bot.log.error("[DB] Unable to update object!")
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
+                    return False
 
             async with self._session.put(self._url + "/{}".format(obj.id), data=data) as r:
-                if r.status == 201:
+                if r.status in (201, 202):
                     self.bot.log.info("[DB] Object successfully updated")
+                    return True
+                elif r.status == 409:
+                    self.bot.log.info("[DB] Object conflict!")
+                    return False
                 else:
                     self.bot.log.error("[DB] Unable to update object!")
                     temp = None
                     async for line in r.content:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
+                    return False
         except Exception as e:
             self.bot.log.error("[DB] Unknown error while trying to update object!")
             self.bot.log.error("Error: {}, Reason: {}".format(type(e).__name__, str(e)))
             raise e
+            return False
 
     async def get(self, obj, key=""):
         """Get object in dictionary form.
@@ -183,17 +202,21 @@ class DB:
                 else:
                     self.bot.log.error("[DB] Unable to update object!")
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
+                    return False
 
             async with self._session.put(self._url + "/{}?rev={}".format(obj.id, rev)) as r:
                 if r.status == 200:
                     self.bot.log.info("[DB] Object successfully updated")
+                    return True
                 else:
                     self.bot.log.error("[DB] Unable to update object!")
                     temp = None
                     async for line in r.content:
                         temp = json.loads(line)
                     self.bot.log.error("[DB] Error: {0[error]} | Reason: {0[reason]}".format(temp))
+                    return False
         except Exception as e:
             self.bot.log.error("[DB] Unknown error while trying to update object!")
             self.bot.log.error("Error: {}, Reason: {}".format(type(e).__name__, str(e)))
             raise e
+            return False
