@@ -7,5 +7,6 @@ cogs/quak.py
 .vscode/
 .cache/
 __pycache__/
+.old/
 
 !config_template.yml
