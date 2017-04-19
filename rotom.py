@@ -10,6 +10,7 @@ import asyncio
 from ruamel import yaml
 
 import discord
+import re
 from discord.ext import commands
 from pathlib import Path
 from cogs.utils import checks
@@ -26,7 +27,7 @@ class Bot(commands.Bot):
         config : str  - Config file name.
         debug  : bool - Debug mode, pass `True` to enable, `False` otherwise."""
         self.boot_time = time.time()
-        self.config_name = config.strip('config_')
+        self.config_name = re.sub("^config_", "", config) # http://stackoverflow.com/questions/1038824/how-do-i-remove-a-substring-from-the-end-of-a-string-in-python
 
         # Initialize logging
         self._init_log(config, debug)
