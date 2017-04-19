@@ -3,48 +3,47 @@
 ---
 bot:
     token: YOUR_TOKEN
-
     # You only need it if you want to give owner access to other people than you
     # The bot will check your Discord app info and add you into the owner list
     owner: 
     - YOUR DISCORD ID
-
     prefix: 
     - ":"
     - "::"
-
-    # Enter the name of the database if you want to use it, otherwise enter ~ instead
-    db: ~
-    
     # Choose to either parse bots' commands in their messages or not.
-    allow_bot: no
+    parse_bot_message: no
 
-    # Multiserver support
-    region: [] # Empty for all regions
-    #fallback: ~ # Fallback servers
+    # Check what cogs to load, by default all .py files in cogs/ folder will be loaded.
+    # Both blacklist and whitelist must be in either collection or list containing the cog name.
+    cogs:
+        # If you don't want the bot to autoload any cogs, use this option
+        # This is also useful if you don't want to load any cogs at start for debugging etc. purpose
+        autoload: yes
+        # ONLY EITHER WILL BE USED, they will be loaded in order, so e.g. if whitelist isn't empty it will be used instead.
+        # NOTE: The lists won't block load cogs command from working.
+        # If not ~, make the bot load *only* the cog(s) listed when bot is initialized
+        only_allow: ~
+        # If not ~, stops the bot from loading listed cog(s) when bot is initialized
+        disallow: ~
+    
+    db:
+        # Enabling database usage
+        enabled: yes
 
-# Check what cogs to load, by default all .py files in cogs/ folder will be loaded.
-# Both blacklist and whitelist must be in either collection or list containing the cog name.
-cogs:
-    # If you don't want the bot to autoload any cogs, use this option
-    # This is also useful if you don't want to load any cogs at start for debugging etc. purpose
-    autoload: yes
+        # If true, values below will be used.
+        name: rotom
+        host: localhost:5984
 
-    # ONLY EITHER WILL BE USED, they will be loaded in order, so e.g. if whitelist isn't empty it will be used instead.
-    # NOTE: The lists won't block load cogs command from working.
 
-    # If not ~, make the bot load *only* the cog(s) listed when bot is initialized
-    only_allow: ~
-    # If not ~, stops the bot from loading listed cog(s) when bot is initialized
-    disallow: ~
+    defaults:
+        # Default rolename settings, ~ for none, capitalization DOESN'T matter, will not be used in selfbot mode
+        superuser: Rotom superuser
+        admin: Rotom admin
 
-defaults:
-    # Default rolename settings, ~ for none, capitalization DOESN'T matter, will not be used in selfbot mode
-    superuser: Rotom superuser
-    admin: Rotom admin
+    # Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
+    # http://discordpy.readthedocs.io/en/rewrite/api.html#discord.Client
+    # https://github.com/Rapptz/discord.py/blob/rewrite/discord/ext/commands/bot.py#L146
+    params:
+        self_bot: no
 
-# Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
-# http://discordpy.readthedocs.io/en/latest/api.html#discord.Client
-# https://github.com/Rapptz/discord.py/blob/master/discord/ext/commands/bot.py#L146
-params:
-    self_bot: no
+# Put cog settings below with cog file name as key
