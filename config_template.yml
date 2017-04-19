@@ -3,10 +3,6 @@
 ---
 bot:
     token: YOUR_TOKEN
-    # You only need it if you want to give owner access to other people than you
-    # The bot will check your Discord app info and add you into the owner list
-    owner: 
-    - YOUR DISCORD ID
     prefix: 
     - ":"
     - "::"
