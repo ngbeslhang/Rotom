@@ -1,6 +1,6 @@
 # Rotom
 
-**WARNING:** **DO NOT** remove `config.yaml` from .gitignore UNLESS you know what are you doing.
+**WARNING:** **DO NOT** edit .gitignore UNLESS you know what are you doing.
 
 **NOTE:** This repo is still WIP.
 
@@ -9,13 +9,12 @@
 - Remove `api` section from `config_template.yml` and follow the way RoboDanny implemented Carbonitex (`api` folder in cogs)
 
 # Requirement
-
 - Python 3.5+
+- CouchDB
 
 ### Modules
 - `discord.py`
 - `ruamel.yaml`
-- CouchDB
 
 # Installation
 
