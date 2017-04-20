@@ -32,9 +32,11 @@ bot:
 
 
     defaults:
-        # Default rolename settings, ~ for none, capitalization DOESN'T matter, will not be used in selfbot mode
-        superuser: Rotom superuser
-        admin: Rotom admin
+        # Default rolename settings, ~ for none, CASE-SENSITIVE.
+        admin:
+        - Rotom Admin
+        mod:
+        - Rotom Mod
 
     # Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
     # http://discordpy.readthedocs.io/en/rewrite/api.html#discord.Client
