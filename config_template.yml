@@ -28,8 +28,8 @@ bot:
 
         # If true, values below will be used.
         name: rotom
-        host: localhost:5984
-
+        host: localhost
+        port: 28015
 
     defaults:
         # Default rolename settings, ~ for none, CASE-SENSITIVE.
