@@ -93,6 +93,7 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
       - This also applies to how many times can the same link get added into the queue.
     -  If majority of the listeners in a server wanted to repeat a song infinitely it's already remedied by local-storage system 
 - `play`
+  - If a video is geo-blocked and the bot exists on other VPNs, the other VPNs will be used to download and deliver/stream the music file back to the server and play
 - `pause`
 - `restart`
 - `goto <time (in MM:SS format)>`
