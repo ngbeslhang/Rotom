@@ -6,8 +6,8 @@ bot:
     prefix: 
     - ":"
     - "::"
-    # Choose to either parse bots' commands in their messages or not.
-    parse_bot_message: no
+    # Choose to either bypass bots' messages in their messages or not.
+    bypass_bots: yes
 
     # Check what cogs to load, by default all .py files in cogs/ folder will be loaded.
     # Both blacklist and whitelist must be in either collection or list containing the cog name.
