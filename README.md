@@ -4,23 +4,25 @@
 
 **NOTE:** This repo is still WIP.
 
-# TODO
+## TODO
 
 - Remove `api` section from `config_template.yml` and follow the way RoboDanny implemented Carbonitex (`api` folder in cogs)
 
-# Requirement
+## Requirement
+
 - Python 3.5+
 - CouchDB
 
 ### Modules
+
 - `discord.py`
 - `ruamel.yaml`
 
-# Installation
+## Installation
 
 **NOTE**: WIP
 
-# Special thanks
+## Special thanks
 
 **NOTE**: Unless otherwise requested not to, anyone who helped me and/or contributed in any way will be added to here.
 
@@ -30,4 +32,4 @@
 - [Thessia](https://github.com/Thessia) for (letting me shamelessly copy) [his bot's source code](https://github.com/Thessia/Liara).
 - [HcgRandon](https://github.com/hcgrandon) for providing inspirations for Rotom's music cog.
 
-* Don't worry, all links here are GitHub's.
+(*) Don't worry, all links here are GitHub's.

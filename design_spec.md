@@ -1,9 +1,14 @@
+# Ideas
+
 ***NOTE***: Everything here should be considered as self-notes, however suggestions are welcomed.
+
 ## `tldlist` command
-- Now that https://tld-list.com has updated their UI and introduced domain availability search I could scrap the site and create a command using the data.
+
+- Now that [tldlist.com](https://tld-list.com) has updated their UI and introduced domain availability search I could scrap the site and create a command using the data.
   - Aliases: `tld`, `domain`
 
 ## Language pack implementation
+
 A cog must be able to use the language system like this:
 
 ```py
@@ -18,10 +23,12 @@ class Cog:
     def quak_quak(self, ctx):
         self.bot.say(self.lang.get('quak.reply', ctx))
 ```
+
 - `Bot.get_lang()` **MUST** return a class
 - ...whose get() can be called to fetch requested string from the language pack
 
 The returned class of `Bot.get_lang()` **MUST**:
+
 - have a required param `filename` and `path_obj` in `__init__()`
 - consist of `get()` function
 - consist of `reload()` function
@@ -31,10 +38,13 @@ The returned class of `Bot.get_lang()` **MUST**:
 ***OR***
 
 Example translation file:
+
 ```yaml
 "Hello, world!": "您好世界"
 ```
+
 In Python:
+
 ```py
 print(locale('Hello, world!', 'zh_cn'))
 ```
@@ -44,11 +54,14 @@ There should be no need for __info__.yaml, considering removing it
 
 Write a custom Bot.say(), other relevant functions & inherited Embed class instead that checks message author's language preference (via database).
 Example translation file:
+
 ```yaml
 "Hello, world!":     # The key itself would be considered as "en_us"
   zh_cn: "你好，世界！"
 ```
+
 Fetching translated string is as easy as:
+
 ```py
 self.bot.say("Hello, world!") # replies with 你好，世界！" if user's lang pref is zh_cn
 
@@ -60,38 +73,46 @@ self.bot.say("Hello, world!", translate=False) # Can be easily replaced with Ctr
 ```
 
 ## Object tree (in database)
+
 ```
 id
 |- type "server"
 |-- superuser: array (either role or member ID, server owner's ID included)
 |-- admin: array (either role or member ID)
 ```
+
 **NOTE**: Bot owner(s), by default, is a superuser of *all servers the bot is in* so the bot owner(s) will be able to provide support to any servers using their bot.
 
-**NOTE**: Superuser and admin WILL BE ENTIRELY SEPARATE. Superuser cannot perform any adminstration commands while admin can. 
+**NOTE**: Superuser and admin WILL BE ENTIRELY SEPARATE. Superuser cannot perform any adminstration commands while admin can.
+
 - But let's be honest that could be bypassed with built-in eval command anyway, and it's an essential command for bot support, which means a certain trust between the bot owner(s) and the server owner(s) is **needed**. The eval command will log who and what code did said person run.
 
 ## Database specs
+
 Malena and Liara's suggestion: `table.get(key)` which means creating a new table class
 
-# Music
-## Auto Pause/Unpause
+## Music
+
+### Auto Pause/Unpause
+
 ~~Definitely not~~ Inspired by HcgRandon's Ayana.
+
 - Pause the current song and list when there's no listeners (aka non-bots) in the VC for minutes (able to set via config file)
 
-## `play/add` Command
+### `play/add` Command
+
 - Usage: `play/add <link/tag> [from time/start|till time/end|from time/start till time/end (in MM:SS format) ]`
-  - Example: `play BRAIN POWER from 1:00 till end` or `play BRAIN POWER from 1:00` assuming that `BRAIN POWER` is a tag 
+  - Example: `play BRAIN POWER from 1:00 till end` or `play BRAIN POWER from 1:00` assuming that `BRAIN POWER` is a tag
 - Supports YouTube/SoundCloud/Twitch
 - Supports playing from/until a time/ within the period
 
+### `song` Command
 
-## `song` Command
 - Only the requester, superusers/admins (user/roles) and bot owner can control the current song.
   - To prevent infinite loop abuse, the superusers/admins (user/roles) can set how many times can a song repeat/restart/goto
     - By default unless they are specifically specified as infinite, if only one was set the value applies to the rest as well
       - This also applies to how many times can the same link get added into the queue.
-    -  If majority of the listeners in a server wanted to repeat a song infinitely it's already remedied by local-storage system 
+    - If majority of the listeners in a server wanted to repeat a song infinitely it's already remedied by local-storage system
 - `play`
   - If a video is geo-blocked and the bot exists on other VPNs, the other VPNs will be used to download and deliver/stream the music file back to the server and play
 - `pause`
@@ -100,19 +121,26 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 - `repeat`
 
 ## `skip` Command
+
 - Skips either the current song, the `playlist` (if it was requested) or `queue`
 
-## `queue` command
+### `queue` command
+
 - `repeat`
 - `shuffle`
 
-## Music local-storage system
+### Music local-storage system
+
 **NOTE**: A way to prevent getting IP banned by YouTube for scraping too much.
+
 - Either store it locally or fetch the files from other servers
 
 ## Tags system (`get`, `set/edit/create`, `give`, `remove/delete` and `block` command groups)
+
 ### Available specifiers for `<object>`s
+
 **NOTE**: String section is only used when the object is known, for example the bot itself would be `bot`
+
 - Guild:
   - String
     `guild`
@@ -123,7 +151,9 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
   - String
     - `bot`
     - `the bot`
+
 ### `get`
+
 - `role <tag/role>`
   - Gives role to the user
 - `role <tag/role> for <user>`
@@ -131,8 +161,6 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 - `info from <object>`
 - `info of <object>`
   - Object could be either a `server`/`guild` string, a channel (mention/name/id), a user (mention/name/id) or `bot`/`the bot` string
-
-
 
 - `role`
   - SET (e.g. `set role <role tag>`)
@@ -175,13 +203,16 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 **NOTE**: Unless specified otherwise, if a tag type isn't mentioned in the subcommand it means it's not usable for said type.
 
 ## `load` and `unload` bot-owner command groups
+
 - `cog/cogs`
   - Supports multiple cog names at once, separated by space
 - `lang/language`
   - Supports multiple lang names at once, separated by space
 
 ## API
+
 - Pretty much essential for multiserver communication (for region-based music playing mainly)
 
 ## Annnnd other people's requests
+
 - https://owo.whats-th.is/ce77f8.png https://owo.whats-th.is/bbc4ac.png (okay not too shabby actually)
