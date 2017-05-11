@@ -11,7 +11,7 @@
 ## Requirement
 
 - Python 3.5+
-- CouchDB
+- RethinkDB
 
 ### Modules
 
