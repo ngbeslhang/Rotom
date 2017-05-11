@@ -21,17 +21,10 @@ bot:
         only_allow: ~
         # If not ~, stops the bot from loading listed cog(s) when bot is initialized
         disallow: ~
-    
-    db:
-        # Enabling database usage
-        enabled: yes
-
-        # If true, values below will be used.
-        name: rotom
-        host: localhost
-        port: 28015
 
     defaults:
+        # Default language, name coming from lang folder's subfolders name'
+        lang: enUS
         # Default rolename settings, ~ for none, CASE-SENSITIVE.
         admin:
         - Rotom Admin
@@ -45,3 +38,7 @@ bot:
         self_bot: no
 
 # Put cog settings below with cog file name as key
+db_rethinkdb:
+    name: rotom
+    host: localhost
+    port: 28015
