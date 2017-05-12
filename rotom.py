@@ -64,6 +64,7 @@ class Bot(commands.AutoShardedBot):
         self.discord_log.addHandler(handler)
         self.log.info("Successfully set up discord.py logging")
 
+
     def when_mentioned_or(self, *prefixes):
         """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for 
         custom per-server prefixes via database.
@@ -88,6 +89,28 @@ class Bot(commands.AutoShardedBot):
             return r
 
         return inner
+
+
+    def get_api_conf(self):
+        """Gets config from API by searching matching config using caller module's name.
+        
+        If unable to find matching config, `None` will be returned instead."""
+        import inspect, os
+        conf = None
+
+        with open(os.path.join(os.path.dirname(__file__), ''), 'r') as c:
+            conf = yaml.safe_load(c)
+
+        # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
+        # Can also be used on get_lang()
+        frm = inspect.stack()[1]
+        module = inspect.getmodule(frm[0]).__name__
+
+        if module.startswith('db_') or module.startswith('api_'):
+            return conf[module.split('_')[1]]
+        else:
+            return conf[module]
+
 
 class Builtin:
     def __init__(self, bot):
