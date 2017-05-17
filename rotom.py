@@ -11,12 +11,14 @@ class Bot(commands.AutoShardedBot):
         # Initializations
         self.boot_time = time.time()
         self._init_log(config, debug)
+        self.config_name = config # for get_conf()
+        self.db = None # For database cogs
 
         # Loading config file
         try:
             with open(config) as c:
                 conf = yaml.safe_load(c)
-                self.log.info("Successfully loaded config file {}".format(config))
+                self.log.info("Successfully loaded config file {}!".format(config))
         except FileNotFoundError:
             self.log.error("Unable to find {}".format(config))
             sys.exit(2)
@@ -27,7 +29,7 @@ class Bot(commands.AutoShardedBot):
             params = {}
         params.update({"command_prefix": self.when_mentioned_or(*conf['bot']['prefix'])})
         super().__init__(**params)
-        self.log.info("Successfully initialized the bot with provided params.")
+        self.log.info("Successfully initialized the bot with provided params!")
 
     def _init_log(self, config, debug):
         """Initialize logging."""
@@ -54,7 +56,7 @@ class Bot(commands.AutoShardedBot):
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(formatter)
         self.log.addHandler(handler)
-        self.log.info("Successfully set up logging")
+        self.log.info("Successfully set up logging!")
 
         self.discord_log = logging.getLogger('discord')
         self.discord_log.setLevel(logging.INFO)
@@ -62,7 +64,7 @@ class Bot(commands.AutoShardedBot):
         handler = logging.FileHandler('logs/discord-{}_{}.log'.format(self.config_name, now))
         handler.setFormatter(formatter)
         self.discord_log.addHandler(handler)
-        self.log.info("Successfully set up discord.py logging")
+        self.log.info("Successfully set up discord.py logging!")
 
 
     def when_mentioned_or(self, *prefixes):
@@ -91,14 +93,14 @@ class Bot(commands.AutoShardedBot):
         return inner
 
 
-    def get_api_conf(self):
-        """Gets config from API by searching matching config using caller module's name.
+    def get_conf(self):
+        """Gets config by searching matching config using caller module's name.
         
         If unable to find matching config, `None` will be returned instead."""
-        import inspect, os
+        import inspect
         conf = None
 
-        with open(os.path.join(os.path.dirname(__file__), ''), 'r') as c:
+        with open(self.config_name, 'r') as c:
             conf = yaml.safe_load(c)
 
         # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
@@ -106,10 +108,10 @@ class Bot(commands.AutoShardedBot):
         frm = inspect.stack()[1]
         module = inspect.getmodule(frm[0]).__name__
 
-        if module.startswith('db_') or module.startswith('api_'):
-            return conf[module.split('_')[1]]
-        else:
+        try:
             return conf[module]
+        except KeyError:
+            return None
 
 
 class Builtin:
