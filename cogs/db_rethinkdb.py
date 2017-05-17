@@ -22,5 +22,8 @@ class DB:
         except TypeError:
             self.bot.log.error("[RethinkDB] Config does not exist!")
 
+    # Now should I keep consistent connection or only connect to the db each time I need to use it
+    # https://cdn.discordapp.com/attachments/231823127015981056/314408855779934218/DiscordCanary_2017-05-17_22-28-17.png
+
 def setup(bot):
     bot.add_cog(DB(bot))
