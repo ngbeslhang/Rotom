@@ -25,11 +25,11 @@ class DB:
     # Now should I keep consistent connection or only connect to the db each time I need to use it
     # https://cdn.discordapp.com/attachments/231823127015981056/314408855779934218/DiscordCanary_2017-05-17_22-28-17.png
 
-    async def insert(self, query):
-        pass
+    async def update(self, query):
+        """A combination of INSERT, UPDATE and DELETE in SQL"""
 
     async def select(self, query):
-        pass
+        """SELECT in SQL"""
 
 def setup(bot):
     bot.add_cog(DB(bot))
