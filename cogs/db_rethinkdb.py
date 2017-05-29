@@ -26,10 +26,10 @@ class DB:
     # https://cdn.discordapp.com/attachments/231823127015981056/314408855779934218/DiscordCanary_2017-05-17_22-28-17.png
 
     async def update(self, query):
-        """A combination of INSERT, UPDATE and DELETE in SQL"""
+        """A combination of INSERT, UPDATE and DELETE"""
 
     async def select(self, query):
-        """SELECT in SQL"""
+        """SELECT"""
 
 def setup(bot):
     bot.add_cog(DB(bot))
