@@ -137,6 +137,8 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 
 ## Tags system (`get`, `set/edit/create`, `give`, `remove/delete` and `block` command groups)
 
+- ☞Ｐａｋｏ#9400 (139395104455524352) suggested using PEG parser instead of regex, looking into it.
+
 ### Available specifiers for `<object>`s
 
 **NOTE**: String section is only used when the object is known, for example the bot itself would be `bot`
