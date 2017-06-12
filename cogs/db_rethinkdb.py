@@ -4,27 +4,28 @@ r.set_loop_type('asyncio')
 class DB:
     def __init__(self, bot):
         self.bot = bot
+        self._conf = self.bot.get_conf()
         bot.loop.run_until_complete(self._init())
 
     async def _init(self):
-        self._conf = self.bot.get_conf()
         try:
-            conn = await r.connect(host=self._conf['host'], port=self._conf['port'], db=self._conf['name'])
+            conn = await self._connect()
             self.bot.log.info("[RethinkDB] Successfully connected!")
             await conn.close()
             self.bot.db = self
         except r.RqlDriverError:
-            try:
-                self.bot.log.info("[RethinkDB] Database not created yet, creating...")
-                conn = await r.connect(host=self._conf['host'], port=self._conf['port'])
-                r.db_create(self._conf['name'])
-                self.bot.log.info("[RethinkDB] Successfully connected and created database!")
-                await conn.close()
-                self.bot.db = self
-            except r.RqlDriverError:
-                self.bot.log.error("[RethinkDB] Unable to connect to database!")
+            self.bot.log.error("[RethinkDB] Unable to connect to database!")
         except TypeError:
             self.bot.log.error("[RethinkDB] Config does not exist!")
+
+    async def _connect(self):
+        try:
+            return r.connect(host=self._conf['host'], port=self._conf['port'], db=self._conf['name'])
+        except r.RqlDriverError:
+            self.bot.log.warning("[RethinkDB] Creating database.")
+            conn = await r.connect(host=self._conf['host'], port=self._conf['port'])
+            r.db_create(self._conf['name'])
+            return conn
 
     # Based on https://rethinkdb.com/docs/sql-to-reql/python/
     # The reason why the id param of all db operation funcs here uses int is based on discord.py rewrite's decision
