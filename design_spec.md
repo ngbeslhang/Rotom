@@ -218,3 +218,4 @@ Malena and Liara's suggestion: `table.get(key)` which means creating a new table
 ## Annnnd other people's requests
 
 - https://owo.whats-th.is/ce77f8.png https://owo.whats-th.is/bbc4ac.png (okay not too shabby actually)
+- https://owo.whats-th.is/6564dd.png (a reminder in light of two recent mention spams)
