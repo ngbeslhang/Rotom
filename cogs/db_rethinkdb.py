@@ -19,13 +19,19 @@ class DB:
             self.bot.log.error("[RethinkDB] Config does not exist!")
 
     async def _connect(self):
+        temp = self._conf
+        name = temp['name']
+        del temp['name']
+        conn = r.connect(**temp)
+
         try:
-            return r.connect(host=self._conf['host'], port=self._conf['port'], db=self._conf['name'])
+            conn.use(name)
         except r.RqlDriverError:
             self.bot.log.warning("[RethinkDB] Creating database.")
-            conn = await r.connect(host=self._conf['host'], port=self._conf['port'])
-            r.db_create(self._conf['name'])
-            return conn
+            r.db_create(name).run(conn)
+            conn.use(name)
+
+        return conn
 
     # Based on https://rethinkdb.com/docs/sql-to-reql/python/
     # The reason why the id param of all db operation funcs here uses int is based on discord.py rewrite's decision
