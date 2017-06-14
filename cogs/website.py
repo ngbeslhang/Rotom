@@ -1,4 +1,4 @@
-"""Website cog for Rotom written in Kyoukai and Asphalt.
+"""Website cog for Rotom written in aiohttp.
 
 This file only contains the necessary cog class and setup() function for discord.py command extension.
 For the main code, visit the cog_website folder."""
@@ -7,7 +7,7 @@ from .cog_website import app
 
 class Website:
     def __init__(self, bot):
-        bot.loop.create_task(app.run())
+        bot.loop.run_until_complete(app.kyk.start())
 
 
 def setup(bot):
