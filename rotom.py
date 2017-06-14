@@ -11,8 +11,8 @@ class Bot(commands.AutoShardedBot):
         # Initializations
         self.boot_time = time.time()
         self._init_log(config, debug)
-        self.config_name = config # for get_conf()
-        self.db = None # For database cogs
+        self.config_name = config  # for get_conf()
+        self.db = None  # For database cogs
 
         # Loading config file
         try:
@@ -22,7 +22,7 @@ class Bot(commands.AutoShardedBot):
         except FileNotFoundError:
             self.log.error("Unable to find {}".format(config))
             sys.exit(2)
-        
+
         # Initialize commands.Bot with params
         params = conf['bot']['params']
         if params is None:
@@ -30,6 +30,16 @@ class Bot(commands.AutoShardedBot):
         params.update({"command_prefix": self.when_mentioned_or(*conf['bot']['prefix'])})
         super().__init__(**params)
         self.log.info("Successfully initialized the bot with provided params!")
+
+        self.add_cog(Builtin(self))
+        self.log.info("Successfully loaded builtin command cog.")
+
+        try:
+            is_bot = not conf['bot']['params']['self_bot']
+        except KeyError:
+            is_bot = True
+
+        self.run(conf['bot']['token'], bot=is_bot)
 
     def _init_log(self, config, debug):
         """Initialize logging."""
@@ -49,7 +59,7 @@ class Bot(commands.AutoShardedBot):
         if not os.path.exists("logs/"):
             os.makedirs("logs/")
 
-        handler = logging.FileHandler('logs/rotom-{}_{}.log'.format(self.config_name, now))
+        handler = logging.FileHandler('logs/rotom-{}_{}.log'.format(config, now))
         handler.setFormatter(formatter)
         self.log.addHandler(handler)
 
@@ -61,11 +71,13 @@ class Bot(commands.AutoShardedBot):
         self.discord_log = logging.getLogger('discord')
         self.discord_log.setLevel(logging.INFO)
 
-        handler = logging.FileHandler('logs/discord-{}_{}.log'.format(self.config_name, now))
+        handler = logging.FileHandler('logs/discord-{}_{}.log'.format(config, now))
         handler.setFormatter(formatter)
         self.discord_log.addHandler(handler)
         self.log.info("Successfully set up discord.py logging!")
 
+    async def on_ready(self):
+        self.log.info("The bot is now ready for commands!")
 
     def when_mentioned_or(self, *prefixes):
         """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for 
@@ -91,7 +103,6 @@ class Bot(commands.AutoShardedBot):
             return r
 
         return inner
-
 
     def get_conf(self):
         """Gets config by searching matching config using caller module's name.
@@ -144,21 +155,21 @@ class Builtin:
             if inspect.isawaitable(result):
                 result = await result
             # Should we include channel in the log?
-            self.bot.log.info(
-                "[EVAL] {0.author.name} ({0.author.id}) ran `{1}`.".
-                format(ctx.message, code))
+            self.bot.log.info("[EVAL] {0.author.name} ({0.author.id}) ran `{1}`.".format(
+                ctx.message, code))
         except Exception as e:
             if self.bot._skip_check(ctx.message.id, self.bot.user.id):
                 await ctx.message.edit(python.format(code, type(e).__name__ + ': ' + str(e)))
             else:
-                await ctx.message.channel.send(python.format(code, type(e).__name__ + ': ' + str(e)))
+                await ctx.message.channel.send(
+                    python.format(code, type(e).__name__ + ': ' + str(e)))
 
             self.bot.log.info(
                 "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` but was met with `{2}: {3}`.".
                 format(ctx.message, code, type(e).__name__, str(e)))
 
             return
-            
+
         if self.bot._skip_check(ctx.message.id, self.bot.user.id):
             await ctx.message.edit(python.format(code, result))
         else:
