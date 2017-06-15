@@ -24,9 +24,10 @@ class RoboDanny:
                 value = '\n'.join(entries[:3])
                 if value:
                     card.add_field(name='Search Results', value=value, inline=False)
-                await self.bot.say(embed=card)
-                await self.bot.say("*Credits to Rapptz for command source code: <https://github.com/Rapptz/RoboDanny/>*")
-                return
+                    card.add_field(name="Credits", 
+                        value="[Rapptz @ GitHub for Robo. Danny's ?g source code](https://github.com/Rapptz/RoboDanny/)",
+                        inline=False)
+                return await self.bot.say(embed=card)
 
             if len(entries) == 0:
                 return await self.bot.say('No results found... sorry.')
