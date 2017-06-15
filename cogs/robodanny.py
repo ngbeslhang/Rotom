@@ -23,7 +23,6 @@ class RoboDanny:
             if card:
                 value = '\n'.join(entries[:3])
                 if value:
-                    card.add_field(name='Search Results', value=value, inline=False)
                     card.add_field(name="Credits", 
                         value="[Rapptz @ GitHub for Robo. Danny's ?g source code](https://github.com/Rapptz/RoboDanny/)",
                         inline=False)
