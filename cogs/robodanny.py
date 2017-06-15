@@ -110,3 +110,6 @@ class RoboDanny:
                 #     entries.append((url, text.replace('...', '')))
 
         return card, entries
+
+def setup(bot):
+    bot.add_cog(RoboDanny(bot))
