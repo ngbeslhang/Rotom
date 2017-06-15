@@ -21,11 +21,9 @@ class RoboDanny:
             await self.bot.say(str(e))
         else:
             if card:
-                value = '\n'.join(entries[:3])
-                if value:
-                    card.add_field(name="Credits", 
-                        value="[Rapptz @ GitHub for Robo. Danny's ?g source code](https://github.com/Rapptz/RoboDanny/)",
-                        inline=False)
+                card.add_field(name="Credits", 
+                    value="[Rapptz @ GitHub for Robo. Danny's ?g source code](https://github.com/Rapptz/RoboDanny/)",
+                    inline=False)
                 return await self.bot.say(embed=card)
 
             if len(entries) == 0:
