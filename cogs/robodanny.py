@@ -12,7 +12,7 @@ class RoboDanny:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['google'])
+    @commands.command(aliases=['google'], description="Credits to Rapptz for command source code: https://github.com/Rapptz/RoboDanny/")
     async def g(self, *, query):
         """Searches google and gives you top result."""
         try:
@@ -21,9 +21,6 @@ class RoboDanny:
             await self.bot.say(str(e))
         else:
             if card:
-                card.add_field(name="Credits", 
-                    value="[Rapptz @ GitHub for Robo. Danny's ?g source code](https://github.com/Rapptz/RoboDanny/)",
-                    inline=False)
                 return await self.bot.say(embed=card)
 
             if len(entries) == 0:
@@ -41,7 +38,6 @@ class RoboDanny:
                 msg = first_entry
 
             await self.bot.say(msg)
-            await self.bot.say("*Credits to Rapptz for command source code: <https://github.com/Rapptz/RoboDanny/>*")
 
     async def get_google_entries(self, query):
         params = {
