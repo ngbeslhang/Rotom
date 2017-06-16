@@ -35,11 +35,56 @@ class Bot(commands.AutoShardedBot):
         self.log.info("Successfully loaded builtin command cog.")
 
         try:
-            is_bot = not conf['bot']['params']['self_bot']
+            self.is_bot = not conf['bot']['params']['self_bot']
         except KeyError:
-            is_bot = True
+            self.is_bot = True
 
-        self.run(conf['bot']['token'], bot=is_bot)
+        self.token = conf['bot']['token']
+
+    # Modified run() and start()
+    def run(self, **kwargs):
+        """Starts the bot. Source code from discord.py's Client.run().
+        
+        WARNING: This function is blocking, read discord.Client.run.__doc__'s warning for details."""
+        import signal
+        from discord import compat
+
+        is_windows = sys.platform == 'win32'
+        loop = self.loop
+        if not is_windows:
+            loop.add_signal_handler(signal.SIGINT, self._do_cleanup)
+            loop.add_signal_handler(signal.SIGTERM, self._do_cleanup)
+
+        task = compat.create_task(self.start(**kwargs), loop=loop)
+
+        def stop_loop_on_finish(fut):
+            loop.stop()
+
+        task.add_done_callback(stop_loop_on_finish)
+
+        try:
+            loop.run_forever()
+        except KeyboardInterrupt:
+            self.discord_log.info('Received signal to terminate bot and event loop.')
+        finally:
+            task.remove_done_callback(stop_loop_on_finish)
+            if is_windows:
+                self._do_cleanup()
+
+            loop.close()
+            if task.cancelled() or not task.done():
+                return None
+            return task.result()
+
+    async def start(self, **kwargs):
+        """Starts the bot in an asynchronous way
+        """
+        bot = kwargs.pop('bot', self.is_bot)
+        del self.is_bot
+        reconnect = kwargs.pop('reconnect', True)
+        await self.login(self.token, bot=bot)
+        del self.token
+        await self.connect(reconnect=reconnect)
 
     def _init_log(self, config, debug):
         """Initialize logging."""
@@ -185,3 +230,4 @@ if __name__ == '__main__':
     if args.config is None:
         args.config = 'config.yml'
     rotom = Bot(config=args.config, debug=args.debug)
+    rotom.run()
