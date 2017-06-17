@@ -12,9 +12,18 @@ class RoboDanny:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['google'], description="Credits to Rapptz for command source code: https://github.com/Rapptz/RoboDanny/")
-    async def g(self, *, query):
+    @commands.command(aliases=['google'], description="Credits to Rapptz for command source code: https://github.com/Rapptz/RoboDanny/", pass_context=True)
+    async def g(self, ctx, *, query):
         """Searches google and gives you top result."""
+        if "discord.gg" in ctx.message.content:
+            try:
+                await self.bot.delete_message(ctx.message)
+                await self.bot.say("Query contains invite link.")
+            except discord.errors.Forbidden:
+                await self.bot.say("Query contains invite link but does not have permission to delete message.")
+            except discord.errors.HTTPException:
+                await self.bot.say("Query contains invite link but failed to delete message.")
+
         try:
             card, entries = await self.get_google_entries(query)
         except RuntimeError as e:
