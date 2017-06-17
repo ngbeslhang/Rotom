@@ -23,6 +23,7 @@ class RoboDanny:
                 await self.bot.say("Query contains invite link but does not have permission to delete message.")
             except discord.errors.HTTPException:
                 await self.bot.say("Query contains invite link but failed to delete message.")
+            return
 
         try:
             card, entries = await self.get_google_entries(query)
