@@ -4,7 +4,7 @@
 
 **NOTE:** This repo is still WIP.
 
-Rotom is an ever-evolving Discord bot designed with modularity in mind.
+Rotom is a Discord bot designed with extensibility and modularity in mind.
 
 ## TODO
 
