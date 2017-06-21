@@ -4,6 +4,8 @@
 
 **NOTE:** This repo is still WIP.
 
+Rotom is an ever-evolving Discord bot designed with modularity in mind.
+
 ## TODO
 
 - Remove `api` section from `config_template.yml` and follow the way RoboDanny implemented Carbonitex (`api` folder in cogs)
