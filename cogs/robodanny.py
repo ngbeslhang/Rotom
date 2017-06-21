@@ -69,7 +69,7 @@ class RoboDanny:
 
         async with aiohttp.get('https://www.google.com/search', params=params, headers=headers) as resp:
             if resp.status != 200:
-                raise RuntimeError('Google somehow failed to respond.')
+                raise RuntimeError('Google somehow failed to respond with status {}, reason: ``'.format(resp.status, resp.reason))
 
             root = etree.fromstring(await resp.text(), etree.HTMLParser())
 
