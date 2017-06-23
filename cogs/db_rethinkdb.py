@@ -37,32 +37,32 @@ class DB:
     # The reason why the id param of all db operation funcs here uses int is based on discord.py rewrite's decision
     # of using int for all Discord object IDs. For legacy/async pass int(discord.[Object].id) instead.
 
-    async def select(self, table: str, id: int):
+    async def select(self, table: str, name):
         """Selects document with given ID from given table and returns the data in the form of dict.
 
         table : str - Table name.
-        id    : int - Document ID."""
+        name        - Document ID. If int is passed, it will be converted to str."""
 
-    async def insert(self, table: str, id: int, data: dict):
+    async def insert(self, table: str, name, data: dict):
         """Insert document into given table with given ID.
         If given table doesn't exists make a new table and insert the document with given ID.
 
         table : str  - Table name.
-        id    : int  - Document ID.
+        name         - Document ID. If int is passed, it will be converted to str.
         data  : dict - Document data."""
 
-    async def update(self, table: str, id: int, data: dict):
+    async def update(self, table: str, name, data: dict):
         """Update document with given ID in given table with new given data.
         
         table : str  - Table name.
-        id    : int  - Document ID.
+        name         - Document ID. If int is passed, it will be converted to str.
         data  : dict - Document data."""
 
-    async def delete(self, table: str, id: int):
+    async def delete(self, table: str, name):
         """Delete document with given ID from the given table.
 
         table : str - Table name.
-        id    : int - Document ID."""
+        name        - Document ID. If int is passed, it will be converted to str."""
 
     async def _eval(self, code: str):
         """Evaluate database code with the built-in eval command and returns the result.

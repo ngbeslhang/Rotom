@@ -125,8 +125,7 @@ class Bot(commands.AutoShardedBot):
         self.log.info("The bot is now ready for commands!")
 
     def when_mentioned_or(self, *prefixes):
-        """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for 
-        custom per-server prefixes via database.
+        """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for custom per-server prefixes via database.
         
         Added a fix for a bug that process_command() will only use the first matching prefix, thus
         if someone uses different-length same-char prefixes in order of shortest length the longer
