@@ -117,8 +117,8 @@ class RoboDanny:
                 #     entries.append((url, text.replace('...', '')))
 
         return card, entries
-        
-    @staticmethod
+
+    @classmethod
     def parse_google_card(self, node):
         if node is None:
             return None
