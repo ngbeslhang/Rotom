@@ -22,14 +22,14 @@ class DB:
         temp = self._conf
         name = temp['name']
         del temp['name']
-        conn = r.connect(**temp)
+        conn = await r.connect(**temp)
 
         try:
-            conn.use(name)
+            await conn.use(name)
         except r.RqlDriverError:
             self.bot.log.warning("[RethinkDB] Creating database.")
-            r.db_create(name).run(conn)
-            conn.use(name)
+            await r.db_create(name).run(conn)
+            await conn.use(name)
 
         return conn
 
@@ -37,32 +37,49 @@ class DB:
     # The reason why the id param of all db operation funcs here uses int is based on discord.py rewrite's decision
     # of using int for all Discord object IDs. For legacy/async pass int(discord.[Object].id) instead.
 
-    async def select(self, table: str, name):
+    async def select(self, tbl: str, name):
         """Selects document with given ID from given table and returns the data in the form of dict.
 
-        table : str - Table name.
-        name        - Document ID. If int is passed, it will be converted to str."""
-
-    async def insert(self, table: str, name, data: dict):
-        """Insert document into given table with given ID.
-        If given table doesn't exists make a new table and insert the document with given ID.
-
-        table : str  - Table name.
-        name         - Document ID. If int is passed, it will be converted to str.
-        data  : dict - Document data."""
-
-    async def update(self, table: str, name, data: dict):
-        """Update document with given ID in given table with new given data.
+        tbl : str - Table name.
+        name      - Document ID. If int is passed, it will be converted to str.
         
-        table : str  - Table name.
-        name         - Document ID. If int is passed, it will be converted to str.
-        data  : dict - Document data."""
+        Exceptions:
+        **NOTE**: Only built-in exceptions will be used for maximum modularity.
+        `NameError` - Given table does not exist.
+        `KeyError` - Given key does not exist."""
+        conn = await self._connect()
+        t = await r.table(tbl)
 
-    async def delete(self, table: str, name):
+        try:
+            await t.run(conn)
+        except r.errors.ReqlOpFailedError:
+            raise NameError("Table {} does not exist.".format(tbl))
+        
+        if type(name) is int:
+            name = str(name)
+
+        result = await t.get(name).run(conn)
+
+        if result is not None:
+            return result
+        else:
+            raise KeyError("Key {} does not exist inside table {}.".format(name, tbl))
+
+    async def write(self, tbl: str, name, data: dict, conflict="update"):
+        """Insert document into given table with given ID.
+        If given table doesn't exists a new table with the given name will be made and the document with given ID will be inserted.
+        If a document with the given name inside the table already exists it will be updated instead by default.
+
+        tbl : str    - Table name.
+        name         - Document ID. If int is passed, it will be converted to str.
+        data  : dict - Document data.
+        conflict     - Ctrl+F `conflict` at https://www.rethinkdb.com/api/python/insert/"""
+
+    async def delete(self, tbl: str, name):
         """Delete document with given ID from the given table.
 
-        table : str - Table name.
-        name        - Document ID. If int is passed, it will be converted to str."""
+        tbl : str - Table name.
+        name      - Document ID. If int is passed, it will be converted to str."""
 
     async def _eval(self, code: str):
         """Evaluate database code with the built-in eval command and returns the result.
