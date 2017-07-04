@@ -46,7 +46,7 @@ class DB:
         """Selects document with given ID from given table and returns the data in the form of dict.
 
         tbl : str - Table name.
-        name      - Document ID. If int is passed, it will be converted to str.
+        name      - Document ID. Only str and int are supported.
         
         Exceptions:
         **NOTE**: Only built-in exceptions will be used for maximum modularity.
@@ -63,9 +63,7 @@ class DB:
             except r.errors.ReqlOpFailedError:
                 raise NameError("Table {} does not exist.".format(tbl))
 
-            if type(name) is int:
-                name = str(name)
-            elif type(name) is not str:
+            if type(name) not in (str, int):
                 raise TypeError("Document ID must be either str or int.")
 
             result = await t.get(name).run(conn)
@@ -92,7 +90,7 @@ class DB:
         `TypeError` - Passed document ID is not in either str or int type.
 
         **NOTE**: In order to include document ID, please insert `"id": "name"` into `data`.
-        The `id` value will be type-checked and converted accordingly with only str and int supported.
+        The `id` value will be type-checked with only str and int supported.
         If it's not inncluded, RethinkDB will assign a random ID instead.
         
         **NOTE**: **kwargs support is planned."""
@@ -111,9 +109,7 @@ class DB:
             
             try:
                 name = data['id']
-                if type(name) is int:
-                    data['id'] = str(name)
-                elif type(name) is not str:
+                if type(name) not in (str, int):
                     raise TypeError("Document ID must be either str or int.")
             except KeyError:
                 pass # Since it doesn't quite matter for us to default to randomly assigned ID 
@@ -130,7 +126,7 @@ class DB:
         """Delete document with given ID from the given table.
 
         tbl : str - Table name.
-        name      - Document ID. If int is passed, it will be converted to str.
+        name      - Document ID. Only str and int are supported.
 
         Exceptions:
         **NOTE**: Only built-in exceptions will be used for maximum modularity.
@@ -147,9 +143,7 @@ class DB:
             except r.errors.ReqlOpFailedError:
                 raise NameError("Table {} does not exist.".format(tbl))
 
-            if type(name) is int:
-                name = str(name)
-            elif type(name) is not str:
+            if type(name) not in (str, int):
                 raise TypeError("Document ID must be either str or int.")
             
             try:
