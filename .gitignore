@@ -2,8 +2,6 @@
 *.yaml
 *.json
 logs/
-cogs/meme/
-cogs/quak.py
 .vscode/
 .cache/
 __pycache__/
