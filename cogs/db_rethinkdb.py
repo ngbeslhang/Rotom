@@ -91,7 +91,7 @@ class DB:
 
         **NOTE**: In order to include document ID, please insert `"id": "name"` into `data`.
         The `id` value will be type-checked with only str and int supported.
-        If it's not inncluded, RethinkDB will assign a random ID instead.
+        If it's not included, RethinkDB will assign a random ID instead.
         
         **NOTE**: **kwargs support is planned."""
         conn = await self._connect()
