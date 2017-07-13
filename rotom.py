@@ -12,7 +12,6 @@ class Bot(commands.AutoShardedBot):
         self.boot_time = time.time()
         self._init_log(config, debug)
         self.config_name = config  # for get_conf()
-        self.db = None  # For database cogs
 
         # Loading config file
         try:
@@ -139,7 +138,10 @@ class Bot(commands.AutoShardedBot):
             r.append(commands.when_mentioned(bot, msg))
 
             # Check if there's custom prefix
-            if self.db is not None:
+            try:
+                if self.db is not None:
+                    pass
+            except AttributeError:
                 pass
             # If custom prefix is not None:
             # r.append(list(custom_prefix_list))

@@ -13,7 +13,7 @@ class DB:
             conn = await self._connect()
             self.bot.log.info("[RethinkDB] Successfully connected!")
             await conn.close()
-            self.bot.db = self
+            setattr(self.bot, "db", self)
         except r.RqlDriverError:
             self.bot.log.error("[RethinkDB] Unable to connect to database!")
         except TypeError:
