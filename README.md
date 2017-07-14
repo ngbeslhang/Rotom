@@ -14,7 +14,7 @@ Rotom is a Discord bot designed with extensibility and modularity in mind.
 
 ### Modules
 
-- rewrite branch of `discord.py`
+- `rewrite` branch of `discord.py`
 - `ruamel.yaml`
 
 ## Installation
@@ -31,7 +31,7 @@ I hereby declare that I will NOT be responsible for any consequences from not fo
 
 ## Special thanks
 
-**NOTE**: Unless otherwise requested not to, anyone who helped me and/or contributed in any way will be added to here.
+**NOTE**: Unless otherwise requested not to, anyone who helped me and/or contributed in any ways will be added to here.
 
 - Discord API guild's #python_discord-py regulars for helping and teaching me in numerous ways.
 - [Rapptz](https://github.com/Rapptz) for creating discord.py + its fantastic `ext.commands` extension and [Robo Danny's source code](https://github.com/Rapptz/RoboDanny).
