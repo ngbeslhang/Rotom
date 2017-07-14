@@ -1,8 +1,5 @@
 # Rotom
-
-**WARNING:** **DO NOT** edit .gitignore UNLESS you know what are you doing.
-
-**NOTE:** This repo is still WIP.
+**NOTE:** This repo is still a WIP.
 
 Rotom is a Discord bot designed with extensibility and modularity in mind.
 
@@ -22,7 +19,15 @@ Rotom is a Discord bot designed with extensibility and modularity in mind.
 
 ## Installation
 
-**NOTE**: WIP
+**NOTE**: This section is a WIP.
+
+## Warnings
+
+I will NOT be responsible for any consequences for not following the warnings mentioned below should they happen to you. ***__You have been warned.__***
+
+- **DO NOT** edit .gitignore UNLESS you know what are you doing.
+- Running selfbots are **STRONGLY DISCOURAGED** except for really specific circumstances.
+  - Per Discord's ToS, any automated scripts run under an user account are prohibited, which includes userbots and selfbots. **Unless AND *unless*** you *truly* know what are you doing, you risk getting any accounts in question deleted by Discord.
 
 ## Special thanks
 
