@@ -10,28 +10,21 @@ bot:
     bypass_bots: yes
 
     # Check what cogs to load, by default all .py files in cogs/ folder will be loaded.
-    # Both blacklist and whitelist must be in either collection or list containing the cog name.
     cogs:
-        # If you don't want the bot to autoload any cogs, use this option
-        # This is also useful if you don't want to load any cogs at start for debugging etc. purpose
-        autoload: yes
-        # ONLY EITHER WILL BE USED, they will be loaded in order, so e.g. if whitelist isn't empty it will be used instead.
-        # NOTE: The lists won't block load cogs command from working.
-        # If not ~, make the bot load *only* the cog(s) listed when bot is initialized
-        only_allow: ~
-        # If not ~, stops the bot from loading listed cog(s) when bot is initialized
-        disallow: ~
+        # Load cogs at bot initialization (bool)
+        load_at_init: yes
+        # Smart cog loading, more info: https://github.com/ngbeslhang/Rotom/issues/13 (bool)
+        # NOTE: If this is true and `load_at_init` is false, any cog with global keynames (except `bot`) will be loaded automatically.
+        smart_loading: no
 
-    defaults:
-        # Default language, name coming from lang folder's subfolders name'
-        lang: enUS
-        # Default rolename settings, ~ for none, CASE-SENSITIVE.
-        admin:
-        - Rotom Admin
-        mod:
-        - Rotom Mod
+        # Essentially whitelist and blacklist when loading cogs. (list/collection)
+        # If not ~, ONLY the cogs listed here will be loaded.
+        allow: ~
+        # If not ~ and `allow` is empty, the cogs listed here will not be loaded automatically.
+        block: ~
+        # If both keys are ~/not searchable by the bot, all cogs will be loaded IF `load_at_init` is true.
 
-    # Params to be passed to rotom.py's Bot class, DO NOT touch it unless you know what are you doing.
+    # Params to be passed to rotom.py's Bot class, DO NOT modify it unless you know what you are doing.
     # http://discordpy.readthedocs.io/en/rewrite/api.html#discord.Client
     # https://github.com/Rapptz/discord.py/blob/rewrite/discord/ext/commands/bot.py#L780
     params:
@@ -42,3 +35,14 @@ db_rethinkdb:
     name: rotom
     host: localhost
     port: 28015
+
+lang:
+    default: enUS
+
+moderation:
+    defaults:
+        # Default rolename settings, ~ for none, CASE-SENSITIVE.
+        admin:
+        - Rotom Admin
+        mod:
+        - Rotom Mod
