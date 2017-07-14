@@ -23,7 +23,7 @@ Rotom is a Discord bot designed with extensibility and modularity in mind.
 
 ## Warnings
 
-I hereby declare that I will NOT be responsible for any consequences for not following the warnings mentioned below should they happen to you. ***__You have been warned.__***
+I hereby declare that I will NOT be responsible for any consequences from not following the warnings mentioned below should they happen to you. ***__You have been warned.__***
 
 - **DO NOT** edit .gitignore UNLESS you know what are you doing.
 - Running selfbots are **STRONGLY DISCOURAGED** except for really specific circumstances.
