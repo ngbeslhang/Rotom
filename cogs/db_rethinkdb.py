@@ -2,6 +2,7 @@ import rethinkdb as r
 r.set_loop_type('asyncio')
 
 
+# Might consider doing https://github.com/dsc/bunch
 class DB:
     def __init__(self, bot):
         self.bot = bot
