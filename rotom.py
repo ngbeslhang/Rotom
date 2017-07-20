@@ -33,6 +33,38 @@ class Bot(commands.AutoShardedBot):
         self.add_cog(Builtin(self))
         self.log.info("Successfully loaded builtin command cog.")
 
+        # Load cogs
+        import os
+        import traceback
+
+        cog_conf = conf['bot']['cogs']
+        cogs = []
+
+        if cog_conf['load_at_init']:
+            if cog_conf['allow'] is not None and isinstance(cog_conf['allow'], list):
+                cogs.append(*cog_conf['allow'])
+            else:
+                for c in os.scandir('./cogs'):
+                    if c.name != "__pycache__":
+                        if c.name[-3:] == '.py':
+                            cogs.append(c.name[:-3])
+                        else:
+                            cogs.append(c.name)
+
+                if cog_conf['block'] is not None and isinstance(cog_conf['block'], list):
+                    s = set(cogs)
+                    for b in cog_conf['block']:
+                        if b in s:
+                            cogs.remove(b)
+
+        cogs = set(cogs)
+        for c in cogs:
+            try:
+                self.load_extension("cog." + c)
+            except:
+                self.log.error("Unable to import module {}!".format(c))
+                self.log.error(traceback.format_exc())
+
         try:
             self.is_bot = not conf['bot']['params']['self_bot']
         except KeyError:
@@ -43,8 +75,8 @@ class Bot(commands.AutoShardedBot):
     # Modified run() and start()
     def run(self, **kwargs):
         """Starts the bot. Source code from discord.py's Client.run().
-        
-        WARNING: This function is blocking, read discord.Client.run.__doc__'s warning for details."""
+
+        WARNING: This function is blocking, read discord.Client.run.__doc__ for details."""
         import signal
         from discord import compat
 
@@ -124,14 +156,14 @@ class Bot(commands.AutoShardedBot):
         self.log.info("The bot is now ready for commands!")
 
     def when_mentioned_or(self, *prefixes):
-        """Basically the same as discord.ext.commands.when_mentioned_or except it also checks for custom per-server prefixes via database.
-        
+        """Modified discord.ext.commands.when_mentioned_or for custom per-server prefixes checking.
+
         Added a fix for a bug that process_command() will only use the first matching prefix, thus
         if someone uses different-length same-char prefixes in order of shortest length the longer
         will be considered a CommandNotFound error.
-        
-        e.g. [':', '::'] as prefix, process_command only match `::help` with prefix ':', thus the bot
-        will return error regarding `:help` not being a command."""
+
+        e.g. [':', '::'] as prefix, process_command only match `::help` with prefix ':', thus the
+        bot will return error regarding `:help` not being a command."""
 
         def inner(bot, msg):
             r = list(prefixes)
@@ -152,7 +184,7 @@ class Bot(commands.AutoShardedBot):
 
     def get_conf(self):
         """Gets config by searching matching config using caller module's name.
-        
+
         If unable to find matching config, `None` will be returned instead."""
         import inspect
         conf = None
@@ -181,9 +213,20 @@ class Builtin:
         """Evaluates code, shamelessly copied and sightly modified from Robo Danny."""
         import inspect, discord
 
-        code = code.strip('` ')
-        python = '```py\n>>> {}\n{}\n```'
+        python = ">>> {}\n{}\n"
+        code = code.strip(';')
         result = None
+        reply = []
+
+        if code[0][:3] == '```':
+            code[0] = code[0][3:]
+        elif code[0] == '```py':
+            del code[0]
+
+        if code[-1][-3:] == '```':
+            code[-1] = code[:-3]
+        elif code[-1] == '```':
+            del code[-1]
 
         env = {
             'bot': self.bot,
@@ -196,27 +239,33 @@ class Builtin:
 
         env.update(globals())
 
-        try:
-            result = eval(code, env)
-            if inspect.isawaitable(result):
-                result = await result
-            # Should we include channel in the log?
-            self.bot.log.info("[EVAL] {0.author.name} ({0.author.id}) ran `{1}`.".format(
-                ctx.message, code))
-        except Exception as e:
-            if self.bot._skip_check(ctx.message.id, self.bot.user.id):
-                await ctx.message.edit(python.format(code, type(e).__name__ + ': ' + str(e)))
-            else:
-                await ctx.message.channel.send(
-                    python.format(code, type(e).__name__ + ': ' + str(e)))
+        for c in code:
+            try:
+                try:
+                    result = eval(c, env)
+                except Exception:
+                    result = exec(c, env)
 
-            self.bot.log.info(
-                "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` but was met with `{2}: {3}`.".
-                format(ctx.message, code, type(e).__name__, str(e)))
+                if inspect.isawaitable(result):
+                    result = await result
 
-            return
+                reply.append(c, result)
+                # Should we include channel in the log?
+                self.bot.log.info("[EVAL] {0.author.name} ({0.author.id}) ran `{1}`.".format(
+                    ctx.message, c))
+            except Exception as e:
+                reply.append(c, type(e).__name__ + ': ' + str(e))
+
+                self.bot.log.info(
+                    "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` but was met with `{2}: {3}`.".
+                    format(ctx.message, c, type(e).__name__, str(e)))
+
+        snd = "```py\n"
+        for c, r in reply:
+            snd = snd + python.format(c, r)
+        snd = snd + "```"
 
         if self.bot._skip_check(ctx.message.id, self.bot.user.id):
-            await ctx.message.edit(python.format(code, result))
+            await ctx.message.edit(snd)
         else:
-            await ctx.message.channel.send(python.format(code, result))
+            await ctx.message.channel.send(snd)

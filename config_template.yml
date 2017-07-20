@@ -15,14 +15,14 @@ bot:
         load_at_init: yes
         # Smart cog loading, more info: https://github.com/ngbeslhang/Rotom/issues/13 (bool)
         # NOTE: If this is true and `load_at_init` is false, any cog with global keynames (except `bot`) will be loaded automatically.
-        smart_loading: no
+        #smart_loading: no
 
         # Essentially whitelist and blacklist when loading cogs. (list/collection)
         # If not ~, ONLY the cogs listed here will be loaded.
         allow: ~
         # If not ~ and `allow` is empty, the cogs listed here will not be loaded automatically.
         block: ~
-        # If both keys are ~/not searchable by the bot, all cogs will be loaded IF `load_at_init` is true.
+        # If both keys are ~/not searchable by the bot, all cogs in the folder will be loaded IF `load_at_init` is true.
 
     # Params to be passed to rotom.py's Bot class, DO NOT modify it unless you know what you are doing.
     # http://discordpy.readthedocs.io/en/rewrite/api.html#discord.Client
