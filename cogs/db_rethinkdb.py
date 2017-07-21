@@ -21,14 +21,11 @@ class DB:
             self.bot.log.error("[RethinkDB] Config does not exist!")
 
     async def _connect(self):
+        """Connect to database"""
         temp = self._conf
         name = temp['name']
         del temp['name']
-        try:
-            conn = await r.connect(**temp)
-        except r.RqlDriverError:
-            self.bot.log.error("[RethinkDB] Unable to connect to database!")
-            return None
+        conn = await r.connect(**temp)
 
         try:
             await conn.use(name)
@@ -39,6 +36,11 @@ class DB:
 
         return conn
 
+    def _raise_conn_error(self):
+        """Raise ConnectionError if the connection to server fails"""
+        self.bot.log.error("[RethinkDB] Unable to connect to database!")
+        raise ConnectionError
+
     # Based on https://rethinkdb.com/docs/sql-to-reql/python/
     # The reason why the id param of all db operation funcs here uses int is based on discord.py rewrite's decision
     # of using int for all Discord object IDs. For legacy/async pass int(discord.[Object].id) instead.
@@ -48,13 +50,17 @@ class DB:
 
         tbl : str - Table name.
         name      - Document ID. Only str and int are supported.
-        
+
         Exceptions:
         **NOTE**: Only built-in exceptions will be used for maximum modularity.
-        `NameError` - Given table does not exist.
-        `KeyError`  - Given key does not exist.
-        `TypeError` - Passed document ID is not in either str or int type."""
-        conn = await self._connect()
+        `NameError`       - Given table does not exist.
+        `KeyError`        - Given key does not exist.
+        `TypeError`       - Passed document ID is not in either str or int type.
+        `ConnectionError` - Failed to connect to the database."""
+        try:
+            conn = await self._connect()
+        except r.RqlDriverError:
+            self._raise_conn_error()
 
         try:
             t = await r.table(tbl)
@@ -88,14 +94,18 @@ class DB:
 
         Exceptions:
         **NOTE**: Only built-in exceptions will be used for maximum modularity.
-        `TypeError` - Passed document ID is not in either str or int type.
+        `TypeError`       - Passed document ID is not in either str or int type.
+        `ConnectionError` - Failed to connect to the database.
 
         **NOTE**: In order to include document ID, please insert `"id": "name"` into `data`.
         The `id` value will be type-checked with only str and int supported.
         If it's not included, RethinkDB will assign a random ID instead.
-        
+
         **NOTE**: **kwargs support is planned."""
-        conn = await self._connect()
+        try:
+            conn = await self._connect()
+        except r.RqlDriverError:
+            self._raise_conn_error()
 
         try:
             t = await r.table(tbl)
@@ -107,14 +117,14 @@ class DB:
                     "[RethinkDB] Table {} does not exist yet, creating...".format(tbl))
                 await r.table_create(tbl).run(conn)
                 self.bot.log.info("[RethinkDB] Table {} successfully created!".format(tbl))
-            
+
             try:
                 name = data['id']
                 if type(name) not in (str, int):
                     raise TypeError("Document ID must be either str or int.")
             except KeyError:
-                pass # Since it doesn't quite matter for us to default to randomly assigned ID 
-            
+                pass # Since it doesn't quite matter for us to default to randomly assigned ID
+
             try:
                 await t.insert(data, conflict=conflict).run(conn)
             except r.errors.ReqlOpFailedError as e:
@@ -131,10 +141,14 @@ class DB:
 
         Exceptions:
         **NOTE**: Only built-in exceptions will be used for maximum modularity.
-        `NameError` - Given table does not exist.
-        `KeyError`  - Given key does not exist.
-        `TypeError` - Passed document ID is not in either str or int type."""
-        conn = await self._connect()
+        `NameError`       - Given table does not exist.
+        `KeyError`        - Given key does not exist.
+        `TypeError`       - Passed document ID is not in either str or int type.
+        `ConnectionError` - Failed to connect to the database."""
+        try:
+            conn = await self._connect()
+        except r.RqlDriverError:
+            self._raise_conn_error()
 
         try:
             t = await r.table(tbl)
@@ -146,21 +160,20 @@ class DB:
 
             if type(name) not in (str, int):
                 raise TypeError("Document ID must be either str or int.")
-            
+
             try:
                 await t.get(name).delete().run(conn)
             except r.errors.ReqlOpFailedError as e:
                 raise KeyError("Unable to delete key {} inside table {}, reason: {}.".format(name, tbl, e))
         finally:
             if conn:
-                await conn.close()        
+                await conn.close()
 
     async def _eval(self, code: str):
         """Evaluate database code with the built-in eval command and returns the result.
-        
+
         code : str - Code to evaluate."""
 
 
 def setup(bot):
     bot.add_cog(DB(bot))
-    
