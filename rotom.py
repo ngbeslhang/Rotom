@@ -46,7 +46,11 @@ class Bot(commands.AutoShardedBot):
             else:
                 for c in os.scandir('./cogs'):
                     if c.name != "__pycache__":
-                        if c.name[-3:] == '.py':
+                        if c.is_dir:
+                            for f in os.scandir('./cogs/{}'.format(c.name)):
+                                if f.name == "__init__.py":
+                                    cog.append(c.name)
+                        elif c.name[-3:] == '.py':
                             cogs.append(c.name[:-3])
                         else:
                             cogs.append(c.name)
