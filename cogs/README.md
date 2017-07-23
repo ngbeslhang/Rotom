@@ -16,4 +16,16 @@ All cogs' setttings can be set as a global key with the cog name as the key name
 The returned object will be under `dict` type. BUNCH might probably be considered to replace it instead.
 
 ### Multi-file extensions
-Refer to `cogs` folder -> `cog_website` folder and `website.py`.
+There's two officially-supported ways (there might be other ways but yet to be confirmed) to write an extension that contain multiple files.
+- `__init__.py` inside the folder (recommended)
+- create an external `.py` file then load contents from a designated folder
+
+### Dependencies
+There's two ways to check for dependencies if your extension requires other extension(s) in order to work.
+- Check for attribute that's unique to the cog.
+- Check if said cog is imported
+
+### Warning for writing database extensions
+If your database extension will set a `db` attribute to `rotom.Bot` instance on load:
+- It must have the **EXACT** interfaces incl. the exceptions as `db_rethinkdb` (`select()`, `write()`, `delete()`, `_eval()`)
+- If the bot's unable to connect to the database the `db` attribute must **NOT** be set
