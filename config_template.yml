@@ -3,7 +3,7 @@
 ---
 bot:
     token: YOUR_TOKEN
-    prefix: 
+    prefix:
     - ":"
     - "::"
     # Choose to either bypass bots' messages in their messages or not.
@@ -35,6 +35,18 @@ db_rethinkdb:
     name: rotom
     host: localhost
     port: 28015
+
+msgblock:
+    # Google Safe Browsing
+    google:
+        api_key: KEY
+
+    # PhishTank
+    # https://www.phishtank.com/developer_info.php for more info
+    phishtank:
+        # https://www.phishtank.com/api_register.php
+        api_key: KEY
+
 
 lang:
     default: enUS
