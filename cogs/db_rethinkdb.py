@@ -96,6 +96,7 @@ class DB:
         **NOTE**: Only built-in exceptions will be used for maximum modularity.
         `TypeError`       - Passed document ID is not in either str or int type.
         `ConnectionError` - Failed to connect to the database.
+        `RuntimeError`    - Failed to insert data, reason included. (Use this if you set `conflict` to `error`)
 
         **NOTE**: In order to include document ID, please insert `"id": "name"` into `data`.
         The `id` value will be type-checked with only str and int supported.
@@ -123,7 +124,7 @@ class DB:
                 if type(name) not in (str, int):
                     raise TypeError("Document ID must be either str or int.")
             except KeyError:
-                pass # Since it doesn't quite matter for us to default to randomly assigned ID
+                pass # Since it doesn't quite matter for us to default to randomly assign ID
 
             try:
                 await t.insert(data, conflict=conflict).run(conn)
