@@ -212,7 +212,7 @@ class Bot(commands.AutoShardedBot):
         module = inspect.getmodule(frm[0]).__name__
 
         try:
-            return conf[module]
+            return DotDict(conf[module])
         except KeyError:
             return None
 
