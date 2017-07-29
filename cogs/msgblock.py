@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from ruamel import yaml
 
+
 class MsgBlock:
     def __init__(self, bot, conf):
         self.bot = bot
@@ -17,13 +18,21 @@ class MsgBlock:
         except RuntimeError:
             svr_dat = await self.bot.db.select("server", msg.server.id)
         except ConnectionError:
-            self.bot.log.error("[MsgBlock Unable to connect to database!]")
+            self.bot.log.error("[MsgBlock] Unable to connect to database!")
             return
 
+        # Discord invite link check
+        try:
+            pass
+        except KeyError as e:
+            self.bot.log.warning(
+                "[MsgBlock] Unable to find server {0.name}'s (){0.id}) settings for Discord invite link check."
+                .format(msg.guild))
         # await get_invite(url)
 
-    def _conf_parse(self, ctx, conf: dict):
+    def _save_conf(self, ctx):
         """Parse the config then saves it into the database."""
+
 
 def setup(bot):
     try:

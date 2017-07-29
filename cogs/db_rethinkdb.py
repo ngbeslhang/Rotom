@@ -124,7 +124,7 @@ class DB:
                 if type(name) not in (str, int):
                     raise TypeError("Document ID must be either str or int.")
             except KeyError:
-                pass # Since it doesn't quite matter for us to default to randomly assign ID
+                pass  # Since it doesn't quite matter for us to default to randomly assign ID
 
             try:
                 await t.insert(data, conflict=conflict).run(conn)
@@ -165,7 +165,8 @@ class DB:
             try:
                 await t.get(name).delete().run(conn)
             except r.errors.ReqlOpFailedError as e:
-                raise KeyError("Unable to delete key {} inside table {}, reason: {}.".format(name, tbl, e))
+                raise KeyError(
+                    "Unable to delete key {} inside table {}, reason: {}.".format(name, tbl, e))
         finally:
             if conn:
                 await conn.close()

@@ -30,9 +30,9 @@ I hereby declare that I will NOT be responsible for any consequences of your act
 **NOTE**: Unless otherwise requested not to, anyone who helped me and/or contributed in any ways will be added to here.
 
 - Discord API guild's #python_discord-py regulars for helping and teaching me in numerous ways.
-- [Rapptz](https://github.com/Rapptz) for creating discord.py + its fantastic `ext.commands` extension and [Robo Danny's source code](https://github.com/Rapptz/RoboDanny).
-- [SunDwarf](https://github.com/SunDwarf) for his private musicbot source code (used as reference for Rotom's music cog).
+- [Rapptz](https://github.com/Rapptz) for creating discord.py + its fantastic `ext.commands` extension and [Robo Danny](https://github.com/Rapptz/RoboDanny) for both source code and as one of the references.
+- [SunDwarf](https://github.com/SunDwarf) for his private music bot source code (used as reference for Rotom's music cog).
 - [Thessia](https://github.com/Thessia) for (letting me shamelessly copy) [his bot's source code](https://github.com/Thessia/Liara).
-- [HcgRandon](https://github.com/hcgrandon) for providing inspirations for Rotom's music cog.
+- [HcgRandon](https://github.com/hcgrandon) for providing inspirations for Rotom's music cog via his Ayana bot.
 
 (*) Don't worry, all links here are GitHub's.

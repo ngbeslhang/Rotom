@@ -37,15 +37,17 @@ db_rethinkdb:
     port: 28015
 
 msgblock:
+
+    # Antimalware/phishing options, leave both api+keys as ~ to disable it
     # Google Safe Browsing
     google:
-        api_key: KEY
+        api_key: ~
 
     # PhishTank
     # https://www.phishtank.com/developer_info.php for more info
     phishtank:
         # https://www.phishtank.com/api_register.php
-        api_key: KEY
+        api_key: ~
 
 
 lang:
