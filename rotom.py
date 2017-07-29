@@ -4,6 +4,16 @@ import sys
 from ruamel import yaml
 from discord.ext import commands
 
+# For eval command
+import discord
+import traceback
+import textwrap
+import io
+import datetime
+
+from collections import Counter
+from contextlib import redirect_stdout
+
 
 class Bot(commands.AutoShardedBot):
     def __init__(self, config, debug):
@@ -49,7 +59,7 @@ class Bot(commands.AutoShardedBot):
                         if c.is_dir:
                             for f in os.scandir('./cogs/{}'.format(c.name)):
                                 if f.name == "__init__.py":
-                                    cog.append(c.name)
+                                    cogs.append(c.name)
                         elif c.name[-3:] == '.py':
                             cogs.append(c.name[:-3])
                         else:
@@ -207,69 +217,74 @@ class Bot(commands.AutoShardedBot):
             return None
 
 
+class Ctx(commands.Context):
+    pass
+
+
+class DotDict(dict):
+    """From https://gist.github.com/hangtwenty/8459209"""
+
+    def __getattr__(self, attr):
+        return self.get(attr, None)
+
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+
 class Builtin:
     def __init__(self, bot):
         self.bot = bot
+        self._last_result = None
 
-    @commands.command(hidden=True, aliases=['eval'])
-    @commands.is_owner()
-    async def debug(self, ctx, *, code: str):
-        """Evaluates code, shamelessly copied and sightly modified from Robo Danny."""
-        import inspect, discord
-
-        python = ">>> {}\n{}\n"
-        code = code.strip(';')
-        result = None
-        reply = []
-
-        if code[0][:3] == '```':
-            code[0] = code[0][3:]
-        elif code[0] == '```py':
-            del code[0]
-
-        if code[-1][-3:] == '```':
-            code[-1] = code[:-3]
-        elif code[-1] == '```':
-            del code[-1]
+    @commands.command(pass_context=True, hidden=True, name='eval')
+    async def _eval(self, ctx, *, body: str):
+        """Evaluates a code, shamelessly copied from Robo Danny"""
 
         env = {
             'bot': self.bot,
             'ctx': ctx,
-            'msg': ctx.message,
-            'guild': ctx.message.guild,
-            'channel': ctx.message.channel,
-            'author': ctx.message.author
+            'channel': ctx.channel,
+            'author': ctx.author,
+            'guild': ctx.guild,
+            'message': ctx.message,
+            '_': self._last_result
         }
 
         env.update(globals())
 
-        for c in code:
-            try:
-                try:
-                    result = eval(c, env)
-                except Exception:
-                    result = exec(c, env)
+        body = self.cleanup_code(body)
+        stdout = io.StringIO()
 
-                if inspect.isawaitable(result):
-                    result = await result
+        to_compile = 'async def func():\n{}'.format(textwrap.indent(body, "  "))
 
-                reply.append(c, result)
-                # Should we include channel in the log?
-                self.bot.log.info("[EVAL] {0.author.name} ({0.author.id}) ran `{1}`.".format(
-                    ctx.message, c))
-            except Exception as e:
-                reply.append(c, type(e).__name__ + ': ' + str(e))
+        try:
+            exec(to_compile, env)
+        except Exception as e:
+            return await ctx.send('```py\n{}: {}\n```'.format(e.__class__.__name__, e))
 
-                self.bot.log.info(
-                    "[EVAL] {0.author.name} ({0.author.id}) tried to run `{1}` but was met with `{2}: {3}`.".
-                    format(ctx.message, c, type(e).__name__, str(e)))
-
-        snd = "```py\n"
-        for c, r in reply:
-            snd = snd + python.format(c, r)
-        snd = snd + "```"
-
-        if self.bot._skip_check(ctx.message.id, self.bot.user.id):
-            await ctx.message.edit(snd)
+        func = env['func']
+        try:
+            with redirect_stdout(stdout):
+                ret = await func()
+        except Exception as e:
+            value = stdout.getvalue()
+            await ctx.send('```py\n{}{}\n```'.format(value, traceback.format_exc()))
         else:
-            await ctx.message.channel.send(snd)
+            value = stdout.getvalue()
+            try:
+                await ctx.message.add_reaction('\u2705')
+            except:
+                pass
+
+            if ret is None:
+                if value:
+                    await ctx.send('```py\n{}\n```'.format(value))
+            else:
+                self._last_result = ret
+                await ctx.send('```py\n{}{}\n```'.format(value, ret))
+
+    def cleanup_code(self, content):
+        """Removes code blocks from the code, also shamelessly copied from Robo Danny"""
+        # remove ```py\n```
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
