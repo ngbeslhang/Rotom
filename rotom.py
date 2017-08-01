@@ -74,7 +74,7 @@ class Bot(commands.Bot):
         cogs = set(cogs)
         for c in cogs:
             try:
-                self.load_extension("cogs" + c)
+                self.load_extension("cogs." + c)
             except:
                 self.log.error("Unable to import module {}!".format(c))
                 self.log.error(traceback.format_exc())
