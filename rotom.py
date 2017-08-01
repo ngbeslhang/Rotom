@@ -264,7 +264,7 @@ class Builtin:
         self.bot = bot
         self._last_result = None
 
-    @commands.command(hidden=True, name='eval')
+    @commands.command(pass_context=True, hidden=True, name='eval')
     async def _eval(self, ctx, *, body: str):
         """Evaluates a code, shamelessly copied from Robo Danny"""
 
