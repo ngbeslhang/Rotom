@@ -15,7 +15,7 @@ from collections import Counter
 from contextlib import redirect_stdout
 
 
-class Bot(commands.AutoShardedBot):
+class Bot(commands.Bot):
     def __init__(self, config, debug):
         import time
         # Initializations
@@ -88,7 +88,7 @@ class Bot(commands.AutoShardedBot):
 
     # Modified run() and start()
     def run(self, **kwargs):
-        """Starts the bot. Source code from discord.py's Client.run().
+        """Starts the bot. Source code based on discord.py's Client.run().
 
         WARNING: This function is blocking, read discord.Client.run.__doc__ for details."""
         import signal
@@ -218,6 +218,7 @@ class Bot(commands.AutoShardedBot):
 
 
 class Ctx(commands.Context):
+    # Could be used for both language and database cogs
     pass
 
 

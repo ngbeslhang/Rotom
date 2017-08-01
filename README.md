@@ -34,5 +34,6 @@ I hereby declare that I will NOT be responsible for any consequences of your act
 - [SunDwarf](https://github.com/SunDwarf) for his private music bot source code (used as reference for Rotom's music cog).
 - [Thessia](https://github.com/Thessia) for (letting me shamelessly copy) [his bot's source code](https://github.com/Thessia/Liara).
 - [HcgRandon](https://github.com/hcgrandon) for providing inspirations for Rotom's music cog via his Ayana bot.
+- [Roadcrosser](https://github.com/Roadcrosser) for currency-related commands idea.
 
 (*) Don't worry, all links here are GitHub's.
