@@ -264,7 +264,7 @@ class Builtin:
         self.bot = bot
         self._last_result = None
 
-    @commands.command(pass_context=True, hidden=True, name='eval')
+    @commands.command(hidden=True, name='eval')
     async def _eval(self, ctx, *, body: str):
         """Evaluates a code, shamelessly copied from Robo Danny"""
 
@@ -314,5 +314,13 @@ class Builtin:
     def cleanup_code(self, content):
         """Removes code blocks from the code, also shamelessly copied from Robo Danny"""
         # remove ```py\n```
+        if content[-3:] == "```":
+            split = content.split('\n')
+            split[-1] = split[-1].split('```')[0]
+            split.append('```')
+            content = '\n'.join(split)
+
         if content.startswith('```') and content.endswith('```'):
             return '\n'.join(content.split('\n')[1:-1])
+        else:
+            return content
