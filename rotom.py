@@ -127,10 +127,10 @@ class Bot(commands.Bot):
         """
         bot = kwargs.pop('bot', self.is_bot)
         del self.is_bot
-        reconnect = kwargs.pop('reconnect', True)
+        rec = kwargs.pop('reconnect', True)
         await self.login(self.token, bot=bot)
         del self.token
-        await self.connect(reconnect=reconnect)
+        await self.connect(reconnect=rec)
 
     def _do_cleanup(self):
         self.discord_log.info('Cleaning up event loop.')
