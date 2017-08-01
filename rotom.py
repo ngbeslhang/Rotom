@@ -1,5 +1,6 @@
 """Rotom's Core"""
 import sys
+import asyncio
 
 from ruamel import yaml
 from discord.ext import commands
@@ -130,6 +131,32 @@ class Bot(commands.Bot):
         await self.login(self.token, bot=bot)
         del self.token
         await self.connect(reconnect=reconnect)
+
+    def _do_cleanup(self):
+        self.discord_log.info('Cleaning up event loop.')
+        loop = self.loop
+        if loop.is_closed():
+            return # we're already cleaning up
+
+        task = discord.compat.create_task(self.close(), loop=loop)
+
+        def _silence_gathered(fut):
+            try:
+                fut.result()
+            except:
+                pass
+            finally:
+                loop.stop()
+
+        def when_future_is_done(fut):
+            pending = asyncio.Task.all_tasks(loop=loop)
+            if pending:
+                self.discord_log.info('Cleaning up after %s tasks', len(pending))
+                gathered = asyncio.gather(*pending, loop=loop)
+                gathered.cancel()
+                gathered.add_done_callback(_silence_gathered)
+            else:
+                loop.stop()
 
     def _init_log(self, config, debug):
         """Initialize logging."""
