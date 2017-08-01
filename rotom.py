@@ -312,7 +312,7 @@ class Builtin:
                 await ctx.send('```py\n{}{}\n```'.format(value, ret))
 
     def cleanup_code(self, content):
-        """Removes code blocks from the code, also shamelessly copied from Robo Danny"""
+        """Removes code blocks from the code, also shamelessly copied from Robo Danny and modified"""
         # remove ```py\n```
         if content[-3:] == "```":
             split = content.split('\n')
