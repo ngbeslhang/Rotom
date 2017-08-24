@@ -53,7 +53,8 @@ class Bot(commands.Bot):
 
         if cog_conf['load_at_init']:
             if cog_conf['allow'] is not None and isinstance(cog_conf['allow'], list):
-                cogs.append(*cog_conf['allow'])
+                for c in cog_conf['allow']:
+                    cogs.append(c)
             else:
                 for c in os.scandir('./cogs'):
                     if c.name != "__pycache__":
