@@ -1,0 +1,62 @@
+# Config file for Rotom
+# Google "YAML tutorial" if you don't know how it works
+---
+bot:
+    token: YOUR_TOKEN
+    prefix:
+    - ":"
+    - "::"
+    # Choose to either bypass bots' messages in their messages or not.
+    bypass_bots: yes
+
+    # Check what cogs to load, by default all .py files in cogs/ folder will be loaded.
+    cogs:
+        # Load cogs at bot initialization (bool)
+        load_at_init: yes
+        # Smart cog loading, more info: https://github.com/ngbeslhang/Rotom/issues/13 (bool)
+        # NOTE: If this is true and `load_at_init` is false, any cog with global keynames (except `bot`) will be loaded automatically.
+        #smart_loading: no
+
+        # Essentially whitelist and blacklist when loading cogs. (list/collection)
+        # If not ~, ONLY the cogs listed here will be loaded.
+        allow: ~
+        # If not ~ and `allow` is empty, the cogs listed here will not be loaded automatically.
+        block: ~
+        # If both keys are ~/not searchable by the bot, all cogs in the folder will be loaded IF `load_at_init` is true.
+
+    # Params to be passed to rotom.py's Bot class, DO NOT modify it unless you know what you are doing.
+    # http://discordpy.readthedocs.io/en/rewrite/api.html#discord.Client
+    # https://github.com/Rapptz/discord.py/blob/rewrite/discord/ext/commands/bot.py#L780
+    params:
+        self_bot: no
+
+# Put cog settings below with cog file name as key
+db_rethinkdb:
+    name: rotom
+    host: localhost
+    port: 28015
+
+msgblock:
+
+    # Antimalware/phishing options, leave both api+keys as ~ to disable it
+    # Google Safe Browsing
+    google:
+        api_key: ~
+
+    # PhishTank
+    # https://www.phishtank.com/developer_info.php for more info
+    phishtank:
+        # https://www.phishtank.com/api_register.php
+        api_key: ~
+
+
+lang:
+    default: enUS
+
+moderation:
+    defaults:
+        # Default rolename settings, ~ for none, CASE-SENSITIVE.
+        admin:
+        - Rotom Admin
+        mod:
+        - Rotom Mod

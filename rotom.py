@@ -1,0 +1,327 @@
+"""Rotom's Core"""
+import sys
+import asyncio
+
+from ruamel import yaml
+from discord.ext import commands
+
+# For eval command
+import discord
+import traceback
+import textwrap
+import io
+import datetime
+
+from collections import Counter
+from contextlib import redirect_stdout
+
+
+class Bot(commands.Bot):
+    def __init__(self, config, debug):
+        import time
+        # Initializations
+        self.boot_time = time.time()
+        self._init_log(config, debug)
+        self.config_name = config  # for get_conf()
+
+        # Loading config file
+        try:
+            with open(config) as c:
+                conf = yaml.safe_load(c)
+                self.log.info("Successfully loaded config file {}!".format(config))
+        except FileNotFoundError:
+            self.log.error("Unable to find {}".format(config))
+            sys.exit(2)
+
+        # Initialize commands.Bot with params
+        params = conf['bot']['params']
+        if params is None:
+            params = {}
+        params.update({"command_prefix": self.when_mentioned_or(*conf['bot']['prefix'])})
+        super().__init__(**params)
+        self.log.info("Successfully initialized the bot with provided params!")
+
+        self.add_cog(Builtin(self))
+        self.log.info("Successfully loaded builtin command cog.")
+
+        # Load cogs
+        import os
+        import traceback
+
+        cog_conf = conf['bot']['cogs']
+        cogs = []
+
+        if cog_conf['load_at_init']:
+            if cog_conf['allow'] is not None and isinstance(cog_conf['allow'], list):
+                for c in cog_conf['allow']:
+                    cogs.append(c)
+            else:
+                for c in os.scandir('./cogs'):
+                    if c.name != "__pycache__":
+                        if c.is_dir:
+                            for f in os.scandir('./cogs/{}'.format(c.name)):
+                                if f.name == "__init__.py":
+                                    cogs.append(c.name)
+                        elif c.name[-3:] == '.py':
+                            cogs.append(c.name[:-3])
+                        else:
+                            cogs.append(c.name)
+
+                if cog_conf['block'] is not None and isinstance(cog_conf['block'], list):
+                    s = set(cogs)
+                    for b in cog_conf['block']:
+                        if b in s:
+                            cogs.remove(b)
+
+        cogs = set(cogs)
+        for c in cogs:
+            try:
+                self.load_extension("cogs." + c)
+            except:
+                self.log.error("Unable to import module {}!".format(c))
+                self.log.error(traceback.format_exc())
+
+        try:
+            self.is_bot = not conf['bot']['params']['self_bot']
+        except KeyError:
+            self.is_bot = True
+
+        self.token = conf['bot']['token']
+
+    # Modified run() and start()
+    def run(self, **kwargs):
+        """Starts the bot. Source code based on discord.py's Client.run().
+
+        WARNING: This function is blocking, read discord.Client.run.__doc__ for details."""
+        import signal
+        from discord import compat
+
+        is_windows = sys.platform == 'win32'
+        loop = self.loop
+        if not is_windows:
+            loop.add_signal_handler(signal.SIGINT, self._do_cleanup)
+            loop.add_signal_handler(signal.SIGTERM, self._do_cleanup)
+
+        task = compat.create_task(self.start(**kwargs), loop=loop)
+
+        def stop_loop_on_finish(fut):
+            loop.stop()
+
+        task.add_done_callback(stop_loop_on_finish)
+
+        try:
+            loop.run_forever()
+        except KeyboardInterrupt:
+            self.discord_log.info('Received signal to terminate bot and event loop.')
+        finally:
+            task.remove_done_callback(stop_loop_on_finish)
+            if is_windows:
+                self._do_cleanup()
+
+            loop.close()
+            if task.cancelled() or not task.done():
+                return None
+            return task.result()
+
+    async def start(self, **kwargs):
+        """Starts the bot in an asynchronous way
+        """
+        bot = kwargs.pop('bot', self.is_bot)
+        del self.is_bot
+        #reconnect = kwargs.pop('reconnect', True)
+        await self.login(self.token, bot=bot)
+        del self.token
+        await self.connect()
+
+    def _do_cleanup(self):
+        self.discord_log.info('Cleaning up event loop.')
+        loop = self.loop
+        if loop.is_closed():
+            return # we're already cleaning up
+
+        task = discord.compat.create_task(self.close(), loop=loop)
+
+        def _silence_gathered(fut):
+            try:
+                fut.result()
+            except:
+                pass
+            finally:
+                loop.stop()
+
+        def when_future_is_done(fut):
+            pending = asyncio.Task.all_tasks(loop=loop)
+            if pending:
+                self.discord_log.info('Cleaning up after %s tasks', len(pending))
+                gathered = asyncio.gather(*pending, loop=loop)
+                gathered.cancel()
+                gathered.add_done_callback(_silence_gathered)
+            else:
+                loop.stop()
+
+    def _init_log(self, config, debug):
+        """Initialize logging."""
+        import datetime, os, logging
+        # Credits to Liara: https://github.com/Thessia/Liara/blob/master/liara.py#L83
+        now = str(datetime.datetime.now()).replace(' ', '_').replace(':', '-').split('.')[0]
+        formatter = logging.Formatter(
+            fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='GMT%z %Y-%m-%d %I:%M:%S %p')
+
+        self.log = logging.getLogger('rotom')
+        if debug:
+            self.log.setLevel(logging.DEBUG)
+        else:
+            self.log.setLevel(logging.INFO)
+
+        # Creates a log folder if it doesn't exist just in case
+        if not os.path.exists("logs/"):
+            os.makedirs("logs/")
+
+        handler = logging.FileHandler('logs/rotom-{}_{}.log'.format(config, now))
+        handler.setFormatter(formatter)
+        self.log.addHandler(handler)
+
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(formatter)
+        self.log.addHandler(handler)
+        self.log.info("Successfully set up logging!")
+
+        self.discord_log = logging.getLogger('discord')
+        self.discord_log.setLevel(logging.INFO)
+
+        handler = logging.FileHandler('logs/discord-{}_{}.log'.format(config, now))
+        handler.setFormatter(formatter)
+        self.discord_log.addHandler(handler)
+        self.log.info("Successfully set up discord.py logging!")
+
+    async def on_ready(self):
+        self.log.info("The bot is now ready for commands!")
+
+    def when_mentioned_or(self, *prefixes):
+        """Modified discord.ext.commands.when_mentioned_or for custom per-server prefixes checking.
+
+        Added a fix for a bug that process_command() will only use the first matching prefix, thus
+        if someone uses different-length same-char prefixes in order of shortest length the longer
+        will be considered a CommandNotFound error.
+
+        e.g. [':', '::'] as prefix, process_command only match `::help` with prefix ':', thus the
+        bot will return error regarding `:help` not being a command."""
+
+        def inner(bot, msg):
+            r = list(prefixes)
+            r.append(commands.when_mentioned(bot, msg))
+
+            # Check if there's custom prefix
+            try:
+                if self.db is not None:
+                    pass
+            except AttributeError:
+                pass
+            # If custom prefix is not None:
+            # r.append(list(custom_prefix_list))
+            r = sorted(r, key=len, reverse=True)
+            return r
+
+        return inner
+
+    def get_conf(self):
+        """Gets config by searching matching config using caller module's name.
+
+        If unable to find matching config, `None` will be returned instead."""
+        import inspect
+        conf = None
+
+        with open(self.config_name, 'r') as c:
+            conf = yaml.safe_load(c)
+
+        # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
+        # Can also be used on get_lang()
+        frm = inspect.stack()[1]
+        module = inspect.getmodule(frm[0]).__name__
+
+        try:
+            return DotDict(conf[module])
+        except KeyError:
+            return None
+
+
+class Ctx(commands.Context):
+    # Could be used for both language and database cogs
+    pass
+
+
+class DotDict(dict):
+    """From https://gist.github.com/hangtwenty/8459209"""
+
+    def __getattr__(self, attr):
+        return self.get(attr, None)
+
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+
+class Builtin:
+    def __init__(self, bot):
+        self.bot = bot
+        self._last_result = None
+
+    @commands.command(pass_context=True, hidden=True, name='eval', aliases=['exec'])
+    async def _eval(self, ctx, *, body: str):
+        """Evaluates a code, shamelessly copied from Robo Danny"""
+
+        env = {
+            'bot': self.bot,
+            'ctx': ctx,
+            'channel': ctx.channel,
+            'author': ctx.author,
+            'guild': ctx.guild,
+            'message': ctx.message,
+            '_': self._last_result
+        }
+
+        env.update(globals())
+
+        body = self.cleanup_code(body)
+        stdout = io.StringIO()
+
+        to_compile = 'async def func():\n{}'.format(textwrap.indent(body, "  "))
+
+        try:
+            exec(to_compile, env)
+        except Exception as e:
+            return await ctx.send('```py\n{}: {}\n```'.format(e.__class__.__name__, e))
+
+        func = env['func']
+        try:
+            with redirect_stdout(stdout):
+                ret = await func()
+        except Exception as e:
+            value = stdout.getvalue()
+            await ctx.send('```py\n{}{}\n```'.format(value, traceback.format_exc()))
+        else:
+            value = stdout.getvalue()
+            try:
+                await ctx.message.add_reaction('\u2705')
+            except:
+                pass
+
+            if ret is None:
+                if value:
+                    await ctx.send('```py\n{}\n```'.format(value))
+            else:
+                self._last_result = ret
+                await ctx.send('```py\n{}{}\n```'.format(value, ret))
+
+    def cleanup_code(self, content):
+        """Removes code blocks from the code, also shamelessly copied from Robo Danny and modified"""
+        # remove ```py\n```
+        if content[-3:] == "```":
+            split = content.split('\n')
+            split[-1] = split[-1].split('```')[0]
+            split.append('```')
+            content = '\n'.join(split)
+
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
+        else:
+            return content

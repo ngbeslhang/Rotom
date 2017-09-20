@@ -1,2 +1,11 @@
+*.yml
+*.yaml
+*.json
+logs/
 .vscode/
-config.yaml
+.cache/
+__pycache__/
+.old/
+
+!config_template.yml
+!lang/**
