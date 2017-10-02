@@ -1,2 +1,8 @@
-.vscode/
-config.yaml
+*.yml
+*.yaml
+logs/
+.cache/
+__pycache__/
+
+!config_template.yml
+!plugins/

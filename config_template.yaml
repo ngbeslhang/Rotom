@@ -1,2 +1,12 @@
+# Read the README.md for comfig documentation
 ---
-token: ~ # Replace ~ with your bot token
+bot:
+  token: TOKEN
+  prefix: r.
+  bypass_bot_messages: yes
+
+  plugins:
+    dir: plugins
+    load: adblock
+
+  params: ~
