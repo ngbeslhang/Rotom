@@ -10,6 +10,16 @@ class Bot(discord.ext.commands.AutoShardedBot):
         # Initializations
         import time
         self.boot_time = time.time()
+        self._init_log(config, debug)
+
+        # Loading config file
+        try:
+            with open(config) as c:
+                conf = yaml.safe_load(c)
+                self.log.info("Successfully loaded config file {}!".format(config))
+        except FileNotFoundError:
+            self.log.error("Unable to find {}".format(config))
+            sys.exit(2)
 
     def _init_log(self, conf_name, debug):
         """Initialize logging."""
@@ -17,7 +27,7 @@ class Bot(discord.ext.commands.AutoShardedBot):
         # Credits to Liara: https://github.com/Thessia/Liara/blob/master/liara.py#L83
         now = str(datetime.datetime.now()).replace(' ', '_').replace(':', '-').split('.')[0]
         formatter = logging.Formatter(
-            fmt='%(asctime)s [%(levelname)s] %(message)s', datefmt='GMT%z %Y-%m-%d %I:%M:%S %p')
+            fmt='%(asctime)s | %(levelname)s: %(message)s', datefmt='GMT%z %Y-%m-%d %I:%M:%S %p')
 
         self.log = logging.getLogger('rotom')
         if debug:
@@ -65,6 +75,13 @@ class Bot(discord.ext.commands.AutoShardedBot):
             The cog to register to the bot.
         """
         # TODO: Add dependancy support
+        # search for a cog's dependancy variable (self.dependancy)
+        # multidir plugins are supported
+        # to import only a specific part of plugin just type them as if you are importing them in Python e.g. plugin.sub
+        # if only the parent module is imported, setup() must be in __init__.py
+        # If there's none bot will return an error implying that the plugin doesn't support import-all
+        # if there's no self.dependancy the plugin will be imported w/o dep checks
+        # Otherwise the bot will attempt to import all deps until it suceed or fail
         self.cogs[type(cog).__name__] = cog
 
         try:
