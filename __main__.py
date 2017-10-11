@@ -1,4 +1,4 @@
-from rotom import Bot
+from bot import Bot
 import argparse
 
 parser = argparse.ArgumentParser(description='Runs Rotom.')
