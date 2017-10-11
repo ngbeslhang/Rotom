@@ -7,5 +7,8 @@ parser.add_argument('-d', '--debug', help='Enable debug mode', action='store_fal
 parser.add_argument('-s', '--setup', help='Set up the bot', action='store_false')
 args = parser.parse_args()
 
+if args.config is None:
+    args.config = 'config.yml'
+
 rotom = Bot(config=args.config, debug=args.debug)
 rotom.run()

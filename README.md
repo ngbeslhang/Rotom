@@ -32,9 +32,6 @@ bot:
   bypass_bot_messages: yes/no
 
   plugins:
-    # Directory of plugins, ONLY relative directories (as long as they work with cd command)
-    dir: plugins
-
     # Choose what plugins to load while the bot is starting
     load: ~
     # Enter ~ to disable plugin loading, otherwise the same as prefix config

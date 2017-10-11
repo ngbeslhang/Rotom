@@ -6,7 +6,6 @@ bot:
   bypass_bot_messages: yes
 
   plugins:
-    dir: plugins
     load: msgblock
 
   params: ~

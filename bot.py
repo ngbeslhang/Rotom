@@ -26,6 +26,10 @@ class Bot(commands.AutoShardedBot):
             self.log.error("Unable to find {}".format(config))
             sys.exit(2)
 
+        # Changes CWD to parent dir of Rotom's main script for plugin loading
+        #self.log.info(os.path.dirname(__file__))
+        os.chdir(os.path.dirname(__file__))
+
         # superinit commands.Bot with params
         params = conf['bot']['params']
         if params is None:
@@ -48,27 +52,15 @@ class Bot(commands.AutoShardedBot):
         plugins = plugin_conf['load']
 
         if isinstance(plugin_conf['load'], (list, str)):
-            plugins = list(plugins)
-            _dir = plugin_conf['dir']
+            plugins = [plugins] if isinstance(plugins, str) else plugins
 
-            if not os.path.exists(_dir) and not os.path.isabs(_dir):
-                self.log.error(
-                    "Directory {} doesn't exist! No plugins will be loaded.".format(_dir))
-            else:
-                imp_dir = '.'.join(_dir.split('/'))
-                # Trying to be as fool proof as possible
-                if imp_dir[0] is '.':
-                    imp_dir = imp_dir[1:]
-                if imp_dir[-1] is not '.':
-                    imp_dir += '.'
-
-                # Actually loading plugins
-                for p in plugins:
-                    try:
-                        self.load_extension(imp_dir + p)
-                    except:
-                        self.log.error("Unable to import module {}!".format(p))
-                        self.log.error(traceback.format_exc())
+            # Actually loading plugins
+            for p in plugins:
+                try:
+                    self.load_extension('plugins.' + p)
+                except:
+                    self.log.error("Unable to import module {}!".format(p))
+                    self.log.error(traceback.format_exc())
         else:
             self.log.info('No plugins to load at initialization.')
 
@@ -112,7 +104,7 @@ class Bot(commands.AutoShardedBot):
         if not os.path.exists("logs/discord"):
             os.makedirs("logs/discord")
 
-        handler = logging.FileHandler('logs/discord/discord-{}_{}.log'.format(config, now))
+        handler = logging.FileHandler('logs/discord/discord-{}_{}.log'.format(conf_name, now))
         handler.setFormatter(formatter)
         self.discord_log.addHandler(handler)
         self.log.info("Successfully set up discord.py logging!")
