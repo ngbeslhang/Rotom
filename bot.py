@@ -13,9 +13,8 @@ class Bot(commands.AutoShardedBot):
         # Initializations
         import time
         self.boot_time = time.time()
-        self._init_log(config, debug)
-
         config = kwargs.pop('config', 'config.yml')
+        self._init_log(config, debug)
 
         # Loading config file
         try:
