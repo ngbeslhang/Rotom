@@ -11,6 +11,7 @@ WIP
 
 # Configuration
 A template config file is provided for you to start with.
+
 **WARNING:** You are expected to have a minimal basic understanding of Python or programming in general.
 
 ```yaml
