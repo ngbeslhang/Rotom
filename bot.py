@@ -8,7 +8,7 @@ import discord
 from discord.ext import commands
 from ruamel import yaml
 
-class Bot(commands.AutoShardedBot):
+class Bot(commands.Bot):
     def __init__(self, **kwargs):
         # Initializations
         import time
@@ -28,7 +28,6 @@ class Bot(commands.AutoShardedBot):
 
         # Changes CWD to parent dir of Rotom's main script for plugin loading
         #self.log.info(os.path.dirname(__file__))
-        os.chdir(os.path.dirname(__file__))
 
         # superinit commands.Bot with params
         params = conf['bot']['params']
@@ -53,11 +52,11 @@ class Bot(commands.AutoShardedBot):
 
         if isinstance(plugin_conf['load'], (list, str)):
             plugins = [plugins] if isinstance(plugins, str) else plugins
-
             # Actually loading plugins
             for p in plugins:
                 try:
-                    self.load_extension('plugins.' + p)
+                    self.load_extension('plugins.'+p)
+                    self.log.info('Successfully imported plugin {}!'.format(p))
                 except:
                     self.log.error("Unable to import module {}!".format(p))
                     self.log.error(traceback.format_exc())
@@ -213,82 +212,3 @@ class Bot(commands.AutoShardedBot):
                 gathered.add_done_callback(_silence_gathered)
             else:
                 loop.stop()
-
-
-    def add_cog(self, cog):
-        """Modified the original add_cog() for dependancy support.
-
-        Parameters
-        ----------
-        cog
-            The cog to register to the bot.
-        """
-        # TODO: Add dependancy support
-        # search for a cog's dependancy variable (self.dependancy)
-        # multidir plugins are supported
-        # to import only a specific part of plugin just type them as if you are importing them in Python e.g. plugin.sub
-        # if only the parent module is imported, setup() must be in __init__.py
-        # If there's none bot will return an error implying that the plugin doesn't support import-all
-        # if there's no self.dependancy the plugin will be imported w/o dep checks
-        # Otherwise the bot will attempt to import all deps until it suceed or fail
-        self.cogs[type(cog).__name__] = cog
-
-        try:
-            check = getattr(cog, '_{.__class__.__name__}__global_check'.format(cog))
-        except AttributeError:
-            pass
-        else:
-            self.add_check(check)
-
-        try:
-            check = getattr(cog, '_{.__class__.__name__}__global_check_once'.format(cog))
-        except AttributeError:
-            pass
-        else:
-            self.add_check(check, call_once=True)
-
-        members = inspect.getmembers(cog)
-        for name, member in members:
-            # register commands the cog has
-            if isinstance(member, Command):
-                if member.parent is None:
-                    self.add_command(member)
-                continue
-
-            # register event listeners the cog has
-            if name.startswith('on_'):
-                self.add_listener(member, name)
-
-
-    def load_extension(self, name):
-        """Loads an extension.
-        An extension is a python module that contains commands, cogs, or
-        listeners.
-        An extension must have a global function, ``setup`` defined as
-        the entry point on what to do when the extension is loaded. This entry
-        point must have a single argument, the ``bot``.
-        Parameters
-        ------------
-        name: str
-            The extension name to load. It must be dot separated like
-            regular Python imports if accessing a sub-module. e.g.
-            ``foo.test`` if you want to import ``foo/test.py``.
-        Raises
-        --------
-        ClientException
-            The extension does not have a setup function.
-        ImportError
-            The extension could not be imported.
-        """
-
-        if name in self.extensions:
-            return
-
-        lib = importlib.import_module(name)
-        if not hasattr(lib, 'setup'):
-            del lib
-            del sys.modules[name]
-            raise discord.ClientException('extension does not have a setup function')
-
-        lib.setup(self)
-        self.extensions[name] = lib
