@@ -7,6 +7,6 @@ bot:
 
   plugins:
     dir: plugins
-    load: adblock
+    load: msgblock
 
   params: ~
