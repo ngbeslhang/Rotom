@@ -2,8 +2,9 @@
 **NOTE:** This repo is still WIP.
 
 # Requirement
-- Python 3.5 / 3.4 (former is recommended)
-  - `discord.py`
+- Python 3.5+
+  - `discord.py` rewrite branch @ GitHub
+  - `ruamel.yaml`
 
 # Installation
 WIP
@@ -30,7 +31,7 @@ bot:
   bypass_bot_messages: yes/no
 
   plugins:
-    # Directory of plugins, both relative and absolute are supported
+    # Directory of plugins, ONLY relative directories (as long as they work with cd command)
     dir: plugins
 
     # Choose what plugins to load while the bot is starting
