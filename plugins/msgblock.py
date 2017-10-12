@@ -99,5 +99,7 @@ class MsgBlock:
                         for key, val in f.items():
                             content += key + ': ' + val + '\n'
 
+        return content
+
 def setup(bot):
     bot.add_cog(bot)
