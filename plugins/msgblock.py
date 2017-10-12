@@ -34,7 +34,7 @@ class MsgBlock:
                                         msg.author.mention))
 
                                 c = self.bot.get_channel(328507346655641601)
-                                em = discord.Embed(colour=discord.Colour(value=None).orange())
+                                em = discord.Embed(colour=discord.Colour.orange())
 
                                 if msg.author.avatar_url is not None:
                                     em.set_author(name=str(msg.author), icon_url=msg.author.avatar_url)
@@ -46,21 +46,22 @@ class MsgBlock:
                                 em.add_field(name="Posted at", value=msg.channel.name)
 
                                 await c.send(embed=em)
-                        except Exception as e:
-                            self.bot.log.error("Unable to retrieve invite: {}".format(e))
+                        except (discord.NotFound, discord.HTTPException):
+                            pass # We don't really need it
 
                 # Mention spamming detection
                 if msg.mentions:
                     if len(msg.raw_mentions) > 5 or len(msg.raw_role_mentions) > 3:
                         await msg.author.ban(
-                            reason="[ROTOM] Mass ping detected, see #d-rotom_logs for details.")
+                            reason="[ROTOM] Mass ping detected, see #d-rotom_logs for details.",
+                            delete_message_days=0)
 
                         await msg.channel.send(
                             "{} has been banned due to: mass pings.".format(
                                 msg.author.mention))
 
                         c = self.bot.get_channel(328507346655641601)
-                        em = discord.Embed(colour=discord.Colour(value=None).red())
+                        em = discord.Embed(colour=discord.Colour.red())
 
                         if msg.author.avatar_url is not None:
                             em.set_author(name=str(msg.author), icon_url=msg.author.avatar_url)
