@@ -36,7 +36,7 @@ class Bot(commands.Bot):
 
         prefix = conf['bot']['prefix']
         if isinstance(prefix, str):
-            prefix = list(prefix)
+            prefix = [prefix] if isinstance(prefix, str) else prefix
         params.update({
             "command_prefix": self.when_mentioned_or(*prefix)
         })
