@@ -46,8 +46,8 @@ class MsgBlock:
                                 em.add_field(name="Posted at", value=msg.channel.name)
 
                                 await c.send(embed=em)
-                        except (discord.NotFound, discord.HTTPException):
-                            pass # We don't really need it
+                        except Exception as e:
+                            self.bot.log.error("Unable to retrieve invite: {}".format(e))
 
                 # Mention spamming detection
                 if msg.mentions:
