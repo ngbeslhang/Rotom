@@ -102,4 +102,4 @@ class MsgBlock:
         return content
 
 def setup(bot):
-    bot.add_cog(bot)
+    bot.add_cog(MsgBlock(bot))
