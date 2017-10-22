@@ -3,6 +3,7 @@
 logs/
 .cache/
 __pycache__/
+.vscode/
 
 !config_template.yml
 !plugins/
