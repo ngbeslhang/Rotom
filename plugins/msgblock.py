@@ -51,7 +51,7 @@ class MsgBlock:
 
                 # Mention spamming detection
                 if msg.mentions:
-                    if len(msg.raw_mentions) > 5 or len(msg.raw_role_mentions) > 3:
+                    if len(msg.mentions) > 5 or len(msg.raw_role_mentions) > 3:
                         await msg.author.ban(
                             reason="[ROTOM] Mass ping detected, see #d-rotom_logs for details.",
                             delete_message_days=0)
