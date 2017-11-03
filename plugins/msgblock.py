@@ -6,7 +6,9 @@ import re
 class MsgBlock:
     def __init__(self, bot):
         self.bot = bot
-        self.dependancy = ["settings"]
+        self.info = {
+            
+        }
         self.discord_re = re.compile(
             r"(discord\.gg\/|discordapp\.com/invite/|discord\.com/invite/)(\S+)",
             re.IGNORECASE)
@@ -23,6 +25,7 @@ class MsgBlock:
             if not any(e in [r.id for r in msg.author.roles] for e in self.roles):
                 # Invte detection
                 inv = self.discord_re.findall(self._embed_extractor(msg))
+                c = self.bot.get_channel(328507346655641601)
                 if inv:
                     for l, i in inv:
                         try:
@@ -33,7 +36,6 @@ class MsgBlock:
                                     "{}'s message has been deleted due to: contains an unauthorized invite link.".format(
                                         msg.author.mention))
 
-                                c = self.bot.get_channel(328507346655641601)
                                 em = discord.Embed(colour=discord.Colour.orange())
 
                                 if msg.author.avatar_url is not None:
@@ -60,7 +62,6 @@ class MsgBlock:
                             "{} has been banned due to: mass pings.".format(
                                 msg.author.mention))
 
-                        c = self.bot.get_channel(328507346655641601)
                         em = discord.Embed(colour=discord.Colour.red())
 
                         if msg.author.avatar_url is not None:
