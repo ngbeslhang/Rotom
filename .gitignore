@@ -4,6 +4,7 @@ logs/
 .cache/
 __pycache__/
 .vscode/
+plugins/verifybackup.py
 
 !config_template.yml
 !plugins/
