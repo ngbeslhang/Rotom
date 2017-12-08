@@ -5,6 +5,7 @@ logs/
 __pycache__/
 .vscode/
 plugins/verifybackup.py
+plugins/radio.py
 
 !config_template.yml
 !plugins/
