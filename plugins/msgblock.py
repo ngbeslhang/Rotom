@@ -21,6 +21,9 @@ class MsgBlock:
                               111504456838819840]
 
     async def on_message(self, msg):
+        if msg.guild is None:
+            return
+        
         if msg.guild.id == 111504456838819840 and msg.channel.id != 270033143996612608:
             if not any(e in [r.id for r in msg.author.roles] for e in self.roles):
                 # Invte detection
