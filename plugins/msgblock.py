@@ -63,20 +63,20 @@ class MsgBlock:
 
                     if len(msg.mentions) >= 8 or len(msg.raw_role_mentions) >= 3:
                         await msg.author.ban(
-                            reason="[ROTOM] Mass ping detected, see #d-rotom_logs for details.",
+                            reason="[ROTOM] Mass pings detected, see #d-rotom_logs for details.",
                             delete_message_days=0)
                         await msg.channel.send(
                             "{} has been banned due to: mass pings.".format(
                             msg.author.mention))
                         em.title = "Banned for mass ping spam"
                     else:
+                        await msg.author.send("You have been kicked for excessive mentions.")
                         await msg.author.kick(
-                            reason="[ROTOM] Mass ping detected, see #d-rotom_logs for details.")
+                            reason="[ROTOM] Excessive pings detected, see #d-rotom_logs for details.")
                         await msg.channel.send(
                             "{} has been kicked due to: excessive pings.".format(
                                 msg.author.mention))
                         em.title = "Kicked for excessive spam"
-                        await msg.author.send("You have been kicked for excessive mentions.")
 
                     if msg.author.avatar_url is not None:
                         em.set_author(name=str(msg.author), icon_url=msg.author.avatar_url)
