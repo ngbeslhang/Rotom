@@ -41,20 +41,12 @@ class MsgBlock:
                                 else:
                                     em.set_author(name=str(msg.author), icon_url=msg.author.default_avatar_url)
                                 
-                                msg = await msg.author.history(limit=6).flatten()
                                 await msg.delete()
                                 # Yes I know
-                                if i <= 5:
-                                    await msg.author.kick(reason="[ROTOM] Posting invite link within first 5 messages, see #d-rotom_logs for details.")
-                                    await msg.channel.send(
-                                        "{} has been kicked due to: posting an unauthorized invite link.".format(
-                                        msg.author.mention))
-                                    em.title = "Kicked for posting invite link within first 5 messages"
-                                else:
-                                    await msg.channel.send(
-                                        "{}'s message has been deleted due to: contains an unauthorized invite link.".format(
-                                        msg.author.mention))
-                                    em.title = "Message deleted for unauthorized invite link"
+                                await msg.channel.send(
+                                    "{}'s message has been deleted due to: contains an unauthorized invite link.".format(
+                                    msg.author.mention))
+                                em.title = "Message deleted for unauthorized invite link"
 
                                 em.add_field(name="Content", value=msg.content, inline=False)
                                 em.add_field(name="User ID", value=msg.author.id)
