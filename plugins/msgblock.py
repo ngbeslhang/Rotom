@@ -66,29 +66,35 @@ class MsgBlock:
                             pass # We don't really need it
 
                 # Mention spamming detection
-                if msg.mentions:
-                    if len(msg.mentions) > 5 or len(msg.raw_role_mentions) > 3:
+                if msg.mentions and len(msg.mentions) >= 5:
+                    em = discord.Embed(colour=discord.Colour.red())
+
+                    if len(msg.mentions) >= 8 or len(msg.raw_role_mentions) >= 3:
                         await msg.author.ban(
                             reason="[ROTOM] Mass ping detected, see #d-rotom_logs for details.",
                             delete_message_days=0)
-
                         await msg.channel.send(
                             "{} has been banned due to: mass pings.".format(
-                                msg.author.mention))
-
-                        em = discord.Embed(colour=discord.Colour.red())
+                            msg.author.mention))
                         em.title = "Banned for mass ping spam"
+                    else:
+                        await msg.author.kick(
+                            reason="[ROTOM] Mass ping detected, see #d-rotom_logs for details.")
+                        await msg.channel.send(
+                            "{} has been kicked due to: excessive pings.".format(
+                                msg.author.mention))
+                        em.title = "Kicked for excessive spam"
 
-                        if msg.author.avatar_url is not None:
-                            em.set_author(name=str(msg.author), icon_url=msg.author.avatar_url)
-                        else:
-                            em.set_author(name=str(msg.author), icon_url=msg.author.default_avatar_url)
-                        em.add_field(name="Content", value=msg.content, inline=False)
-                        em.add_field(name="User ID", value=msg.author.id)
-                        em.add_field(name="Message ID", value=msg.id)
-                        em.add_field(name="Posted at", value=msg.channel.name)
+                    if msg.author.avatar_url is not None:
+                        em.set_author(name=str(msg.author), icon_url=msg.author.avatar_url)
+                    else:
+                        em.set_author(name=str(msg.author), icon_url=msg.author.default_avatar_url)
+                    em.add_field(name="Content", value=msg.content, inline=False)
+                    em.add_field(name="User ID", value=msg.author.id)
+                    em.add_field(name="Message ID", value=msg.id)
+                    em.add_field(name="Posted at", value=msg.channel.name)
 
-                        await c.send(embed=em)
+                    await c.send(embed=em)
 
 
     def _embed_extractor(self, msg):
