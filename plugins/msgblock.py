@@ -10,7 +10,7 @@ class MsgBlock:
             
         }
         self.discord_re = re.compile(
-            r"(discord\.gg\/|discordapp\.com/invite/|discord\.com/invite/)(\S+)",
+            r"(discord\.gg\/|discordapp\.com\/invite\/|discord\.com\/invite\/)(\S+)",
             re.IGNORECASE)
         self.roles = [111505380638519296,
                       117242433091141636,
