@@ -22,8 +22,7 @@ class MsgBlock:
         self.bypass_channels = [270033143996612608,
                                 384425811664437258,
                                 384425461310291968,
-                                384425987053584384,
-                                388507941302566912]
+                                384425987053584384]
 
     async def on_message(self, msg):
         if msg.guild is None:
