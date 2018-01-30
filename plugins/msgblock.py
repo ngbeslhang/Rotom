@@ -19,12 +19,17 @@ class MsgBlock:
         self.bypass_server = [175094349116342274,
                               146626123990564864,
                               111504456838819840]
+        self.bypass_channels = [270033143996612608,
+                                384425811664437258,
+                                384425461310291968,
+                                384425987053584384,
+                                388507941302566912]
 
     async def on_message(self, msg):
         if msg.guild is None:
             return
         
-        if msg.guild.id == 111504456838819840 and msg.channel.id != 270033143996612608:
+        if msg.guild.id == 111504456838819840 and msg.channel.id not in self.bypass_channels:
             if not any(e in [r.id for r in msg.author.roles] for e in self.roles):
                 # Invte detection
                 inv = self.discord_re.findall(self._embed_extractor(msg))
