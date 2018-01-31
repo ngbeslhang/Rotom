@@ -1,2 +1,11 @@
+*.yml
+*.yaml
+logs/
+.cache/
+__pycache__/
 .vscode/
-config.yaml
+plugins/verifybackup.py
+plugins/radio.py
+
+!config_template.yml
+!plugins/
