@@ -1,3 +1,4 @@
+# FOR LATEST VERSION PLEASE VISIT DEVELOP BRANCH
 # Rotom
 **WARNING:** **DO NOT** remove `config.yaml` from .gitignore UNLESS you know what are you doing.
 
