@@ -1,2 +1,3 @@
 ---
-token: ~ # Replace ~ with your bot token
+bot:
+  token: ~
