@@ -59,4 +59,14 @@ venv.bak/
 # End of https://www.gitignore.io/api/python
 
 .vscode/
-config.yaml
+logs/
+*.yml
+*.yaml
+
+# Not ignoring YAML files in plugins/ and lang/ cus we do need them
+# And the template, of course
+!config_template.yml
+!plugins/*.yml
+!plugins/*.yaml
+!lang/*.yml
+!lang/*.yaml
