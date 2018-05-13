@@ -1,0 +1,19 @@
+---
+bot:
+  token: ~
+  selfbot: no
+
+  db:
+    sys: json
+    # PostgreSQL setup
+    #sys: postgresql
+    #host: 127.0.0.1
+    #port: 5432
+
+  cache:
+    host: 127.0.0.1
+    port: 6379
+  
+  plugins: ~
+
+  params: ~
