@@ -1,31 +1,6 @@
 # Plugin Development: Database Plugin Specification
 
-A database
-
-## Domain-Specific Language
-
-A SQL-like (both syntax and feature wise) DSL is designed right within `Bot.db()` to make it more developer-friendly. The full syntax is as follows:
-
-```
-<SET/GET/(DELETE/DEL)> type:key[.subkey] [value (only if GIVE is used)] [...] IN table_name 
-[WHERE]
-```
-
-### Examples
-
-```
-SET id:1
-    id:1.lang
-    id:1.owner.id
-    IN server
-```
-
-### Terminology
-
-| DSL | SQL/Relation Database |
-| --- | ---|
-| Type | Column |
-| `SET` | `CREATE`/`UPDATE` |
+A database plugin is a 
 
 ## Specification
 
@@ -38,3 +13,9 @@ In order to ensure 100% compactibility amongst other non-database plugins, all d
 - The plugin will grab configuration from `Bot.get_conf()`
 
 ### CRUD
+
+#### `db.set()` (CREATE and UPDATE combined)
+
+#### `db.get()` (READ)
+
+#### `db.del()` (DELETE)
