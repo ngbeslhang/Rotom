@@ -12,6 +12,9 @@ You must install the following dependencies for Rotom to work:
   - `ruamel.yaml`
 - Redis 4.0+
 
+Optional dependencies:
+- PostgreSQL
+
 ## Installation
 
 WIP
